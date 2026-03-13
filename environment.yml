@@ -2,9 +2,10 @@ name: glm4-agent
 dependencies:
   - python=3.10
   - pip
+  - cudatoolkit=11.8
   - pip:
     - transformers
-    - torch
+    - torch==2.0.1+cu118
     - langchain
     - langchain-core
     - langchain-community
@@ -19,3 +20,6 @@ dependencies:
     - matplotlib
     - pillow
     - gradio
+    - accelerate
+    - bitsandbytes
+    - optimum

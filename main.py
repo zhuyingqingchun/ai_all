@@ -2,14 +2,23 @@ import os
 import sys
 import json
 import time
+import logging
 from typing import List, Dict, Any, Optional
 
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from langchain.agents import AgentExecutor, create_tool_calling_agent
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.tools import Tool
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+from accelerate import Accelerator
+
+# 配置日志
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 class GLMAgent:
     def __init__(self, model_path: str = "./models/GLM-4.7-20B"):
@@ -19,6 +28,15 @@ class GLMAgent:
         self.agent_executor = None
         self.tools = self._initialize_tools()
         self.memory = []
+        self.accelerator = Accelerator()
+        
+        # 配置内存使用
+        torch.cuda.empty_cache()
+        logger.info(f"CUDA设备数量: {torch.cuda.device_count()}")
+        for i in range(torch.cuda.device_count()):
+            logger.info(f"设备 {i}: {torch.cuda.get_device_name(i)}")
+            logger.info(f"  总显存: {torch.cuda.get_device_properties(i).total_memory / 1e9:.2f}GB")
+            logger.info(f"  可用显存: {torch.cuda.memory_allocated(i) / 1e9:.2f}GB")
     
     def _initialize_tools(self) -> List[Tool]:
         def search_tool(query: str) -> str:
@@ -88,25 +106,42 @@ class GLMAgent:
     
     def load_model(self):
         """加载GLM-4.7-20B模型"""
-        print("正在加载模型...")
+        logger.info("正在加载模型...")
         start_time = time.time()
         
+        # 加载tokenizer
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_path,
             trust_remote_code=True
         )
         
+        # 配置模型加载参数
+        quantization_config = BitsAndBytesConfig(
+            load_in_8bit=False,
+            llm_int8_threshold=6.0
+        )
+        
+        # 加载模型
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_path,
-            device_map="auto",
+            device_map="balanced",
             torch_dtype=torch.float16,
-            trust_remote_code=True
+            trust_remote_code=True,
+            max_memory={0: "90GB", 1: "90GB", 2: "90GB", 3: "90GB"},
+            quantization_config=quantization_config
         )
+        
+        # 使用accelerator优化
+        self.model = self.accelerator.prepare(self.model)
         
         # 优化模型推理
         self.model.eval()
         
-        print(f"模型加载完成，耗时: {time.time() - start_time:.2f}秒")
+        # 清空缓存
+        torch.cuda.empty_cache()
+        
+        logger.info(f"模型加载完成，耗时: {time.time() - start_time:.2f}秒")
+        logger.info(f"模型设备: {next(self.model.parameters()).device}")
     
     def _create_agent(self):
         """创建Agent"""
@@ -138,9 +173,13 @@ class GLMAgent:
             "text-generation",
             model=self.model,
             tokenizer=self.tokenizer,
-            max_new_tokens=2048,
+            max_new_tokens=4096,
             temperature=0.7,
-            top_p=0.95
+            top_p=0.95,
+            device_map="auto",
+            batch_size=1,
+            num_return_sequences=1,
+            do_sample=True
         )
         
         llm = HuggingFacePipeline(pipeline=pipe)
@@ -161,17 +200,35 @@ class GLMAgent:
         if not self.agent_executor:
             self._create_agent()
         
-        # 多步规划和反思闭环
-        result = self.agent_executor.invoke({
-            "input": query,
-            "chat_history": self.memory
-        })
+        # 记录开始时间和内存使用
+        start_time = time.time()
+        start_memory = torch.cuda.memory_allocated() / 1e9
         
-        # 更新记忆
-        self.memory.append(HumanMessage(content=query))
-        self.memory.append(AIMessage(content=result['output']))
-        
-        return result['output']
+        try:
+            # 多步规划和反思闭环
+            result = self.agent_executor.invoke({
+                "input": query,
+                "chat_history": self.memory
+            })
+            
+            # 更新记忆
+            self.memory.append(HumanMessage(content=query))
+            self.memory.append(AIMessage(content=result['output']))
+            
+            # 限制记忆长度，防止内存溢出
+            if len(self.memory) > 10:
+                self.memory = self.memory[-10:]
+            
+            return result['output']
+        finally:
+            # 记录结束时间和内存使用
+            end_time = time.time()
+            end_memory = torch.cuda.memory_allocated() / 1e9
+            logger.info(f"查询处理时间: {end_time - start_time:.2f}秒")
+            logger.info(f"内存使用变化: {start_memory:.2f}GB -> {end_memory:.2f}GB")
+            
+            # 清空缓存
+            torch.cuda.empty_cache()
     
     def clear_memory(self):
         """清空记忆"""
