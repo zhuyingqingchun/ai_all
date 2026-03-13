@@ -1,0 +1,21 @@
+name: glm4-agent
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - transformers
+    - torch
+    - langchain
+    - langchain-core
+    - langchain-community
+    - pydantic
+    - pydantic-settings
+    - requests
+    - beautifulsoup4
+    - lxml
+    - tqdm
+    - numpy
+    - pandas
+    - matplotlib
+    - pillow
+    - gradio

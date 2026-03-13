@@ -1,0 +1,57 @@
+# 虚拟环境
+venv/
+env/
+*.conda/
+
+# 模型文件
+models/
+*.bin
+*.safetensors
+*.pt
+
+# 日志文件
+logs/
+*.log
+
+# 配置文件
+.env
+
+# 临时文件
+*.tmp
+*.temp
+__pycache__/
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 构建文件
+build/
+dist/
+*.egg-info/
+
+# 测试文件
+.pytest_cache/
+
+# 数据文件
+data/
+
+# 缓存文件
+.cache/
+.tensorboard/
+
+# 其他
+*.pyc
+*.pyo
+*.pyd
+
+# 下载文件
+*.zip
+*.tar.gz
+*.tar.bz2
