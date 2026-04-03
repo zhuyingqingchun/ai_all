@@ -1,25 +1,31 @@
-name: glm4-agent
-dependencies:
-  - python=3.10
-  - pip
-  - cudatoolkit=11.8
-  - pip:
-    - transformers
-    - torch==2.0.1+cu118
-    - langchain
-    - langchain-core
-    - langchain-community
-    - pydantic
-    - pydantic-settings
-    - requests
-    - beautifulsoup4
-    - lxml
-    - tqdm
-    - numpy
-    - pandas
-    - matplotlib
-    - pillow
-    - gradio
-    - accelerate
-    - bitsandbytes
-    - optimum
+name: swdtorch12
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+  - nvidia
+
+# Dependencies
+# - python=3.11
+# - pytorch
+# - torchvision
+# - torchaudio
+# - pytorch-cuda=12.1
+
+# Pip dependencies
+pip:
+  - huggingface_hub
+  - requests
+  - langgraph
+  - langchain-core
+  - langsmith
+  - pydantic
+  - orjson
+  - numpy
+  - pandas
+  - tqdm
+  - jupyter
+  - pytest
+  - black
+  - isort
+  - flake8

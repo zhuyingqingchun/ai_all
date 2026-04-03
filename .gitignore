@@ -1,57 +1,61 @@
-# 虚拟环境
-venv/
-env/
-*.conda/
-
-# 模型文件
-models/
-*.bin
-*.safetensors
-*.pt
-
-# 日志文件
-logs/
-*.log
-
-# 配置文件
-.env
-
-# 临时文件
-*.tmp
-*.temp
+# Python
+*.py[cod]
 __pycache__/
+.pytest_cache/
+.tox/
+.venv/
+env/
+venv/
 
-# IDE文件
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
-# 操作系统文件
+# OS
 .DS_Store
 Thumbs.db
 
-# 构建文件
-build/
-dist/
-*.egg-info/
+# Logs
+*.log
+logs/
 
-# 测试文件
-.pytest_cache/
-
-# 数据文件
-data/
-
-# 缓存文件
-.cache/
-.tensorboard/
-
-# 其他
-*.pyc
-*.pyo
-*.pyd
-
-# 下载文件
+# Data
+*.jsonl
+*.json
+*.csv
+*.xlsx
 *.zip
 *.tar.gz
-*.tar.bz2
+
+# Models
+models/
+modelscope_cache/
+
+# MiniMind
+dataset/
+MiniMind2/
+
+# Environment
+environment.yml
+requirements.txt
+
+# Testing
+test_results/
+coverage/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Other
+*.tmp
+*.temp
+*.bak
+*.old
