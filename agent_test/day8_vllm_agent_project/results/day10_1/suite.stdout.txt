@@ -160,3 +160,4 @@
     "overall_passed": true
   }
 }
+Day 8.2 总结已保存到: results/day8_2/day8_2_suite_summary.json

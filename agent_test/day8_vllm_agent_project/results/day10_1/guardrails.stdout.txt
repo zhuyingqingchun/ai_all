@@ -1,0 +1,8 @@
+[Day9] lint main multistep dataset
+[dataset-guardrails] ERRORS: none
+[dataset-guardrails] WARNINGS: none
+[Day9] lint regression suite
+[dataset-guardrails] ERRORS: none
+[dataset-guardrails] WARNINGS: none
+[Day9] dataset guardrails passed
+[Day9] now you can run: bash scripts/run_multistep_82_suite.sh <model_alias>

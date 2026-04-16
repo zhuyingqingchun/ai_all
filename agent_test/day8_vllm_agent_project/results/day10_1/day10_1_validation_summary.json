@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-04-16T21:03:02.253495",
+  "project_root": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project",
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day10_1_assertion_dataset.json",
+  "model": "next80b_fp8",
+  "session_count": 3,
+  "turn_count": 3,
+  "assertion_coverage": {
+    "expected_regex_any_present": true,
+    "expected_regex_all_present": true,
+    "forbidden_contains_any_present": true
+  },
+  "guardrails": {
+    "returncode": 0,
+    "passed": true
+  },
+  "suite": {
+    "returncode": 0,
+    "passed": true
+  },
+  "overall_passed": true
+}
