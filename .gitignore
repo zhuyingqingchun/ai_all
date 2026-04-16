@@ -1,60 +1,37 @@
 # Python
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-*.pyi
+.pytest_cache/
+.mypy_cache/
 
-# Virtual environments
+# Build / packaging
+*.egg-info/
+build/
+dist/
+
+# Env
 .venv/
-venv/
-env/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
+.env
 
 # Logs
 *.log
 logs/
 
-# Training / experiment outputs
-runs/
-outputs/
-results/
-checkpoints/
-ckpt/
-wandb/
-tensorboard/
+# Runtime results
+results/**/*.json
+results/**/*.jsonl
+results/**/*.log
 
-# Data
-data/
-datasets/
+# Local model/cache
+models/
+modelscope_cache/
 
-# Model weights
-*.pt
-*.pth
-*.ckpt
-*.bin
-*.safetensors
-*.onnx
-
-# Cache
-.cache/
-pytest_cache/
-.mypy_cache/
-
-# Secrets
-.env
-*.key
-*.pem
-secrets.yaml
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
 
 # Project specific - agent_test
 agent_test/down.sh
@@ -78,4 +55,4 @@ agent_test/plan_patch/
 
 # Project specific - keep only core files
 # Keep: src/, scripts/, datasets/, README.md, pyproject.toml, requirements.txt
-# Ignore: results/, __pycache__/, *.egg-info/, day*_vllm_agent_project/
+# Ignore: day*_vllm_agent_project/
