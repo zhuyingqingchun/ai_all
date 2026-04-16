@@ -1,0 +1,282 @@
+{
+  "base_url": "http://127.0.0.1:8000/v1",
+  "model": "next80b_fp8",
+  "total_cases": 6,
+  "passed_cases": 6,
+  "pass_rate": 1.0,
+  "avg_latency_ms": 302.84,
+  "results": [
+    {
+      "name": "basic_explanation",
+      "description": "基础中文解释能力",
+      "latency_ms": 201.27,
+      "response_text": "AI agent 是一种能够感知环境、自主决策并采取行动以实现特定目标的智能程序。",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    },
+    {
+      "name": "json_router_style",
+      "description": "结构化输出能力：只输出 JSON",
+      "latency_ms": 205.42,
+      "response_text": "{\"tool\":\"calculator\",\"args\":{\"expression\":\"45454+87987987\"}}",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    },
+    {
+      "name": "single_request_memory",
+      "description": "单请求多轮上下文记忆能力",
+      "latency_ms": 72.01,
+      "response_text": "纽约",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    },
+    {
+      "name": "boundary_invalid_math",
+      "description": "边界输入：非法数学表达式处理倾向",
+      "latency_ms": 572.99,
+      "response_text": "表达式 `2/**3` 是非法的 Python 语法。\n\n在 Python 中，`**` 是幂运算符（指数运算），它需要两个操作数：一个底数和一个指数，例如 `2**3` 表示 2 的 3 次方。\n\n但 `2/**3` 中，`**` 后面直接跟了 `/`，这会导致语法错误，因为：\n\n- `**` 是一个二元",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    },
+    {
+      "name": "unsupported_city",
+      "description": "边界输入：不支持城市的处理倾向",
+      "latency_ms": 418.66,
+      "response_text": "目前暂不支持查询火星天气。  \n火星的天气数据由航天探测器（如NASA的“好奇号”、“毅力号”）传回，但尚未有实时、公开、面向公众的常态化天气服务。如需了解火星气象信息，可参考NASA等航天机构发布的科学报告。",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    },
+    {
+      "name": "long_instruction_following",
+      "description": "长指令遵循与格式控制",
+      "latency_ms": 346.7,
+      "response_text": "结论：Agent具备自主决策和任务执行能力，而普通聊天机器人仅能响应预设问题。  \n原因：Agent能根据环境动态规划行动、调用工具、持续迭代目标，而聊天机器人局限于模式匹配和固定回复。",
+      "passed": true,
+      "missing_any": [],
+      "missing_all": []
+    }
+  ],
+  "raw_payloads": {
+    "basic_explanation": {
+      "id": "chatcmpl-bcd4a85db2e4aa07",
+      "object": "chat.completion",
+      "created": 1776177044,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "AI agent 是一种能够感知环境、自主决策并采取行动以实现特定目标的智能程序。",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 28,
+        "total_tokens": 50,
+        "completion_tokens": 22,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    },
+    "json_router_style": {
+      "id": "chatcmpl-b36c191aab059a60",
+      "object": "chat.completion",
+      "created": 1776177044,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "{\"tool\":\"calculator\",\"args\":{\"expression\":\"45454+87987987\"}}",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 70,
+        "total_tokens": 95,
+        "completion_tokens": 25,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    },
+    "single_request_memory": {
+      "id": "chatcmpl-ae37a2f43f31015d",
+      "object": "chat.completion",
+      "created": 1776177044,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "纽约",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 60,
+        "total_tokens": 62,
+        "completion_tokens": 2,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    },
+    "boundary_invalid_math": {
+      "id": "chatcmpl-8eeb37ae3ffe6d7f",
+      "object": "chat.completion",
+      "created": 1776177044,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "表达式 `2/**3` 是非法的 Python 语法。\n\n在 Python 中，`**` 是幂运算符（指数运算），它需要两个操作数：一个底数和一个指数，例如 `2**3` 表示 2 的 3 次方。\n\n但 `2/**3` 中，`**` 后面直接跟了 `/`，这会导致语法错误，因为：\n\n- `**` 是一个二元",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "length",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 40,
+        "total_tokens": 136,
+        "completion_tokens": 96,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    },
+    "unsupported_city": {
+      "id": "chatcmpl-868f4f01b872315a",
+      "object": "chat.completion",
+      "created": 1776177045,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "目前暂不支持查询火星天气。  \n火星的天气数据由航天探测器（如NASA的“好奇号”、“毅力号”）传回，但尚未有实时、公开、面向公众的常态化天气服务。如需了解火星气象信息，可参考NASA等航天机构发布的科学报告。",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 43,
+        "total_tokens": 108,
+        "completion_tokens": 65,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    },
+    "long_instruction_following": {
+      "id": "chatcmpl-9cf991055c19e986",
+      "object": "chat.completion",
+      "created": 1776177045,
+      "model": "next80b_fp8",
+      "choices": [
+        {
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "结论：Agent具备自主决策和任务执行能力，而普通聊天机器人仅能响应预设问题。  \n原因：Agent能根据环境动态规划行动、调用工具、持续迭代目标，而聊天机器人局限于模式匹配和固定回复。",
+            "refusal": null,
+            "annotations": null,
+            "audio": null,
+            "function_call": null,
+            "tool_calls": [],
+            "reasoning": null
+          },
+          "logprobs": null,
+          "finish_reason": "stop",
+          "stop_reason": null,
+          "token_ids": null
+        }
+      ],
+      "service_tier": null,
+      "system_fingerprint": null,
+      "usage": {
+        "prompt_tokens": 76,
+        "total_tokens": 128,
+        "completion_tokens": 52,
+        "prompt_tokens_details": null
+      },
+      "prompt_logprobs": null,
+      "prompt_token_ids": null,
+      "kv_transfer_params": null
+    }
+  }
+}

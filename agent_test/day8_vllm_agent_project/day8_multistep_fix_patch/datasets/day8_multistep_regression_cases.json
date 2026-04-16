@@ -1,0 +1,17 @@
+[
+  {
+    "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+    "acceptable_tool_sequences": [["get_time", "calculator"]],
+    "note": "修复 再算... 被误吞进 final_instruction"
+  },
+  {
+    "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+    "acceptable_tool_sequences": [["calculator", "calculator"]],
+    "note": "修复 双计算步骤丢失"
+  },
+  {
+    "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+    "acceptable_tool_sequences": [["get_weather", "calculator"], ["calculator"]],
+    "note": "修复 unsupported_city 在多步里误吞整个计划"
+  }
+]

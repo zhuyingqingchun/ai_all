@@ -1,0 +1,69 @@
+[
+  {
+    "session_name": "multistep_basic_combo",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+        "expected_tools_sequence": ["get_time", "calculator"],
+        "expected_contains_all": ["东京", "90"],
+        "tags": ["multistep", "time", "calculator"]
+      },
+      {
+        "user": "先查北京天气，再查东京时间，然后用两行总结。",
+        "expected_tools_sequence": ["get_weather", "get_time"],
+        "expected_contains_all": ["北京", "东京"],
+        "expected_contains_any": ["天气", "时间", "总结"],
+        "tags": ["multistep", "weather", "time", "format"]
+      },
+      {
+        "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+        "expected_tools_sequence": ["calculator", "calculator"],
+        "expected_contains_all": ["161", "9"],
+        "tags": ["multistep", "calculator"]
+      }
+    ]
+  },
+  {
+    "session_name": "multistep_with_memory",
+    "turns": [
+      {
+        "user": "北京天气如何",
+        "acceptable_tool_sequences": [["get_weather"]],
+        "expected_contains_any": ["北京", "温度", "气温", "℃"],
+        "tags": ["seed", "weather"]
+      },
+      {
+        "user": "东京现在几点",
+        "acceptable_tool_sequences": [["get_time"]],
+        "expected_contains_any": ["东京", "时间", "点", "星期"],
+        "tags": ["seed", "time"]
+      },
+      {
+        "user": "先回顾我们前面问过哪些城市，再告诉我纽约现在几点。",
+        "acceptable_tool_sequences": [["get_time"]],
+        "expected_contains_all": ["北京", "东京", "纽约"],
+        "expected_contains_any": ["时间", "点"],
+        "tags": ["multistep", "memory", "reference"]
+      }
+    ]
+  },
+  {
+    "session_name": "multistep_partial_failure",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [["get_weather", "calculator"], ["calculator"]],
+        "expected_contains_all": ["南京", "144"],
+        "expected_contains_any": ["失败", "暂不支持", "无法"],
+        "tags": ["multistep", "boundary", "partial_failure"]
+      },
+      {
+        "user": "先算 2/**3，再告诉我北京现在几点，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [["calculator", "get_time"], ["get_time"]],
+        "expected_contains_all": ["北京"],
+        "expected_contains_any": ["失败", "格式有误", "计算失败", "时间"],
+        "tags": ["multistep", "boundary", "partial_failure"]
+      }
+    ]
+  }
+]

@@ -1,0 +1,138 @@
+{
+  "total_turns": 18,
+  "passed_turns": 18,
+  "pass_rate": 1.0,
+  "avg_latency_ms": {
+    "planning": 196.02,
+    "tool": 0.01,
+    "answer": 288.47,
+    "summary": 59.73
+  },
+  "by_tool": {
+    "get_weather": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "get_time": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "calculator": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "direct_answer": {
+      "total": 7,
+      "passed": 7,
+      "pass_rate": 1.0
+    }
+  },
+  "by_tag": {
+    "weather": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1.0
+    },
+    "basic": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "time": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "calculator": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "memory": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "history": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "reference": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    },
+    "synonym": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    },
+    "ellipsis": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "unsupported_city": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "boundary": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "summary": {
+      "total": 6,
+      "passed": 6,
+      "pass_rate": 1.0
+    }
+  },
+  "by_failure_type": {},
+  "by_route_source": {
+    "heuristic_weather": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "heuristic_time": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "heuristic_math": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "heuristic_history": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    },
+    "model_json": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    },
+    "heuristic_ellipsis_weather": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "heuristic_unsupported_city": {
+      "total": 2,
+      "passed": 2,
+      "pass_rate": 1.0
+    },
+    "heuristic_invalid_math": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    }
+  }
+}

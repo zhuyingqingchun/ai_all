@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vllm-agent-eval"
+version = "0.1.0"
+description = "Modular engineering evaluation framework for a vLLM-served agent"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.30.0",
+]
+
+[project.scripts]
+vllm-agent-eval = "vllm_agent_eval.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
