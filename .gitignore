@@ -1,0 +1,81 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyi
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Training / experiment outputs
+runs/
+outputs/
+results/
+checkpoints/
+ckpt/
+wandb/
+tensorboard/
+
+# Data
+data/
+datasets/
+
+# Model weights
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+*.onnx
+
+# Cache
+.cache/
+pytest_cache/
+.mypy_cache/
+
+# Secrets
+.env
+*.key
+*.pem
+secrets.yaml
+
+# Project specific - agent_test
+agent_test/down.sh
+agent_test/test_api.py
+agent_test/vllm_server.log
+agent_test/1.log
+agent_test/2.log
+agent_test/memor.log
+agent_test/wlx.log
+agent_test/day5_eval_results.json
+agent_test/day6_summary.json
+agent_test/day6_traces.jsonl
+agent_test/day7_vllm_agent_engineering_eval.py
+agent_test/day7_vllm_agent_eval_results.json
+agent_test/day7_vllm_agent_eval_traces.jsonl
+agent_test/vllm_api_eval_results.json
+agent_test/vllm_api_noninteractive_eval.py
+agent_test/qwen_service.zip
+agent_test/day8_vllm_agent_project.zip
+agent_test/plan_patch/
+
+# Project specific - keep only core files
+# Keep: src/, scripts/, datasets/, README.md, pyproject.toml, requirements.txt
+# Ignore: results/, __pycache__/, *.egg-info/, day*_vllm_agent_project/
