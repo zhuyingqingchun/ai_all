@@ -6,6 +6,7 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
+from .assertion_matchers import evaluate_text_assertions
 from .client import VLLMChatClient
 from .config import ANSWER_MAX_TOKENS, DEFAULT_RESULTS_JSON, DEFAULT_TRACE_JSONL, PLANNING_MAX_TOKENS
 from .memory import maybe_summarize
@@ -42,12 +43,17 @@ def classify_failure(trace: TurnTrace, turn_spec: Dict[str, Any]) -> Tuple[bool,
         if contains_any is not None and check_contains_any(trace.answer, contains_any):
             return True, None, None
         return False, "tool_error", trace.tool_result.get("error")
-    contains_all = turn_spec.get("expected_contains_all")
-    if contains_all is not None and not check_contains_all(trace.answer, contains_all):
-        return False, ("memory_error" if "memory" in turn_spec.get("tags", []) else "answer_error"), f"missing all keywords: {contains_all}"
-    contains_any = turn_spec.get("expected_contains_any")
-    if contains_any is not None and not check_contains_any(trace.answer, contains_any):
-        return False, ("memory_error" if "memory" in turn_spec.get("tags", []) else "answer_error"), f"missing any keywords: {contains_any}"
+    assertion_result = evaluate_text_assertions(
+        answer=trace.answer,
+        turn_spec=turn_spec,
+        failure_type="answer_error",
+    )
+    if not assertion_result.passed:
+        return (
+            False,
+            assertion_result.failure_type,
+            assertion_result.failure_detail,
+        )
     return True, None, None
 
 

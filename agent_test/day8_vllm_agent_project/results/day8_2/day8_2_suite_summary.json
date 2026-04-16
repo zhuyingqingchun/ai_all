@@ -6,8 +6,8 @@
     "pass_rate": 1.0,
     "avg_latency_ms": {
       "planning": 0.0,
-      "answer": 360.62,
-      "summary": 254.92
+      "answer": 382.23,
+      "summary": 260.72
     },
     "avg_steps_per_turn": 2.0,
     "by_step_tool": {
@@ -74,7 +74,7 @@
     "pass_rate": 1.0,
     "avg_latency_ms": {
       "planning": 0.0,
-      "answer": 316.12,
+      "answer": 344.82,
       "summary": 0.0
     },
     "avg_steps_per_turn": 2.0,

@@ -4,7 +4,7 @@
   "pass_rate": 1.0,
   "avg_latency_ms": {
     "planning": 0.0,
-    "answer": 316.12,
+    "answer": 344.82,
     "summary": 0.0
   },
   "avg_steps_per_turn": 2.0,

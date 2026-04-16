@@ -1,13 +1,8 @@
 from __future__ import annotations
 
-import re
 from typing import Any, Dict, Iterable, List, Tuple
 
-
-TIME_LITERAL_RE = re.compile(r"\b([01]?\d|2[0-3]):[0-5]\d\b")
-DATE_LITERAL_RE = re.compile(r"\b20\d{2}-\d{2}-\d{2}\b")
-TEMP_LITERAL_RE = re.compile(r"\b-?\d+(?:\.\d+)?\s*(?:°C|℃)\b")
-WINDSPEED_LITERAL_RE = re.compile(r"\b\d+(?:\.\d+)?\s*(?:km/h|公里/小时|m/s|米/秒)\b")
+from .assertion_matchers import find_dynamic_literals
 
 
 def _iter_turns(data: Any) -> Iterable[Dict[str, Any]]:
@@ -61,11 +56,11 @@ def lint_turn(turn: Dict[str, Any], turn_index: int) -> List[str]:
         if not isinstance(values, list):
             warnings.append(f"turn[{turn_index}] {key} is not a list")
             continue
-        fragile = _find_fragile_literals(values)
-        for item in fragile:
+        flagged = find_dynamic_literals(values)
+        for item in flagged:
             warnings.append(
-                f"turn[{turn_index}] fragile assertion in {key}: {item} | "
-                f"suggest using expected_regex_any / semantic assertion"
+                f"turn[{turn_index}] {key} contains dynamic literal {item} | "
+                f"suggest using expected_regex_any / expected_regex_all for time/date/temp/wind values"
             )
     return warnings
 
