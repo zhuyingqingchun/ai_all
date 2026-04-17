@@ -1,0 +1,13 @@
+{
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day15_langgraph_formal_subset.json",
+  "model_label": "next80b_fp8",
+  "session_count": 4,
+  "turn_count": 4,
+  "passed_count": 1,
+  "pass_rate": 0.25,
+  "failure_types": {
+    "answer_error": 3
+  },
+  "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day15_langgraph_formal/day15_formal_results.json",
+  "overall_passed": false
+}
