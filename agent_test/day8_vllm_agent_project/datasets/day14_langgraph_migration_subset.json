@@ -1,0 +1,61 @@
+[
+  {
+    "session_name": "day14_runner_time_and_calc",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+        "tags": [
+          "day14",
+          "runner",
+          "time",
+          "calculator",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day14_runner_weather_and_time",
+    "turns": [
+      {
+        "user": "先查北京天气，再告诉我上海现在几点。",
+        "tags": [
+          "day14",
+          "runner",
+          "weather",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day14_runner_partial_failure",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "tags": [
+          "day14",
+          "runner",
+          "partial_failure",
+          "boundary",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day14_runner_double_calc",
+    "turns": [
+      {
+        "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+        "tags": [
+          "day14",
+          "runner",
+          "calculator",
+          "multistep"
+        ]
+      }
+    ]
+  }
+]

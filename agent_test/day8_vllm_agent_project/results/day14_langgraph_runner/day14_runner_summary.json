@@ -1,0 +1,16 @@
+{
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day14_langgraph_migration_subset.json",
+  "model_label": "next80b_fp8",
+  "session_count": 4,
+  "turn_count": 4,
+  "passed_count": 4,
+  "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day14_langgraph_runner/langgraph_results.json",
+  "langgraph_answer_nonempty_count": 4,
+  "langgraph_debug_trace_count": 4,
+  "heuristic_tool_mentions": {
+    "get_weather": 2,
+    "get_time": 2,
+    "calculator": 2
+  },
+  "overall_passed": true
+}
