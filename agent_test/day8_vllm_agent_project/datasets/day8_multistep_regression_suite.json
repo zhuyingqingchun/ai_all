@@ -1,51 +1,160 @@
 [
-
   {
-
     "session_name": "multistep_regression_cases",
-
     "turns": [
-
       {
-
         "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
-
-        "acceptable_tool_sequences": [["get_time", "calculator"]],
-
-        "expected_contains_all": ["东京", "90"],
-
-        "tags": ["multistep", "regression", "time", "calculator"]
-
+        "acceptable_tool_sequences": [
+          [
+            "get_time",
+            "calculator"
+          ]
+        ],
+        "expected_contains_all": [
+          "东京",
+          "90"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "time",
+          "calculator"
+        ]
       },
-
       {
-
         "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
-
-        "acceptable_tool_sequences": [["calculator", "calculator"]],
-
-        "expected_contains_all": ["161", "9"],
-
-        "tags": ["multistep", "regression", "calculator"]
-
+        "acceptable_tool_sequences": [
+          [
+            "calculator",
+            "calculator"
+          ]
+        ],
+        "expected_contains_all": [
+          "161",
+          "9"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "calculator"
+        ]
       },
-
       {
-
         "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
-
-        "acceptable_tool_sequences": [["get_weather", "calculator"], ["calculator"]],
-
-        "expected_contains_all": ["南京", "144"],
-
-        "expected_contains_any": ["失败", "暂不支持", "无法"],
-
-        "tags": ["multistep", "regression", "boundary", "partial_failure"]
-
+        "acceptable_tool_sequences": [
+          [
+            "get_weather",
+            "calculator"
+          ],
+          [
+            "calculator"
+          ]
+        ],
+        "expected_contains_all": [
+          "南京",
+          "144"
+        ],
+        "expected_contains_any": [
+          "失败",
+          "暂不支持",
+          "无法"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "boundary",
+          "partial_failure"
+        ]
       }
-
     ]
-
+  },
+  {
+    "session_name": "day10_2_regex_time_case",
+    "turns": [
+      {
+        "user": "先查北京天气，再告诉我上海现在几点。",
+        "acceptable_tool_sequences": [
+          [
+            "get_weather",
+            "get_time"
+          ]
+        ],
+        "expected_contains_all": [
+          "北京",
+          "上海"
+        ],
+        "expected_regex_any": [
+          "\\b\\d{1,2}:\\d{2}\\b"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "day10_2",
+          "regex",
+          "dynamic_time"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day10_2_regex_all_case",
+    "turns": [
+      {
+        "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+        "acceptable_tool_sequences": [
+          [
+            "calculator",
+            "calculator"
+          ]
+        ],
+        "expected_regex_all": [
+          "161",
+          "\\b9\\b"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "day10_2",
+          "regex_all",
+          "calculator"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day10_2_forbidden_case",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [
+          [
+            "get_weather",
+            "calculator"
+          ],
+          [
+            "calculator"
+          ]
+        ],
+        "expected_contains_all": [
+          "南京",
+          "144"
+        ],
+        "expected_contains_any": [
+          "失败",
+          "暂不支持",
+          "无法"
+        ],
+        "forbidden_contains_any": [
+          "未触发任何工具调用"
+        ],
+        "tags": [
+          "multistep",
+          "regression",
+          "day10_2",
+          "forbidden",
+          "partial_failure"
+        ]
+      }
+    ]
   }
-
 ]
