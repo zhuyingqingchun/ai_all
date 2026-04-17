@@ -1,0 +1,20 @@
+{
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day12_langgraph_compare_subset.json",
+  "model": "next80b_fp8",
+  "session_count": 3,
+  "turn_count": 3,
+  "baseline": {
+    "returncode": 0,
+    "passed": true,
+    "stdout_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day12_compare/baseline/stdout.txt",
+    "stderr_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day12_compare/baseline/stderr.txt",
+    "output_dir": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day12_compare/baseline"
+  },
+  "langgraph": {
+    "passed": true,
+    "count": 3,
+    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day12_compare/langgraph/results.json",
+    "output_dir": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day12_compare/langgraph"
+  },
+  "overall_passed": true
+}

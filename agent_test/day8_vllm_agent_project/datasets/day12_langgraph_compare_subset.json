@@ -1,0 +1,47 @@
+[
+  {
+    "session_name": "day12_compare_time_and_calc",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+        "tags": [
+          "day12",
+          "compare",
+          "time",
+          "calculator",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day12_compare_weather_and_time",
+    "turns": [
+      {
+        "user": "先查北京天气，再告诉我上海现在几点。",
+        "tags": [
+          "day12",
+          "compare",
+          "weather",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day12_compare_partial_failure",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "tags": [
+          "day12",
+          "compare",
+          "partial_failure",
+          "boundary",
+          "multistep"
+        ]
+      }
+    ]
+  }
+]

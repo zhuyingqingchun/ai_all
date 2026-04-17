@@ -1,0 +1,198 @@
+[
+  {
+    "session_name": "day12_compare_time_and_calc",
+    "turn_index": 1,
+    "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+    "result": {
+      "user_input": "先告诉我东京现在几点，再算一下(23+7)*3。",
+      "plan": {
+        "tool": "multistep",
+        "steps": [
+          {
+            "tool": "get_time",
+            "args": {
+              "city": "上海"
+            }
+          },
+          {
+            "tool": "calculator",
+            "args": {
+              "expression": "(23+7)*3"
+            }
+          }
+        ],
+        "route_source": "heuristic_multistep"
+      },
+      "tool_results": [
+        {
+          "tool": "get_time",
+          "args": {
+            "city": "上海"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "city": "上海",
+              "timezone": "Asia/Shanghai",
+              "time": "2026-04-15 10:30:00",
+              "weekday": "Wednesday",
+              "source": "mock_repeatable_time"
+            },
+            "error": null
+          }
+        },
+        {
+          "tool": "calculator",
+          "args": {
+            "expression": "(23+7)*3"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "expression": "(23+7)*3",
+              "result": 90
+            },
+            "error": null
+          }
+        }
+      ],
+      "final_answer": "[LangGraph POC] get_time => {'ok': True, 'data': {'city': '上海', 'timezone': 'Asia/Shanghai', 'time': '2026-04-15 10:30:00', 'weekday': 'Wednesday', 'source': 'mock_repeatable_time'}, 'error': None} | calculator => {'ok': True, 'data': {'expression': '(23+7)*3', 'result': 90}, 'error': None}",
+      "debug_trace": [
+        "planner: {'tool': 'multistep', 'steps': [{'tool': 'get_time', 'args': {'city': '上海'}}, {'tool': 'calculator', 'args': {'expression': '(23+7)*3'}}], 'route_source': 'heuristic_multistep'}",
+        "executor: [{'tool': 'get_time', 'args': {'city': '上海'}, 'result': {'ok': True, 'data': {'city': '上海', 'timezone': 'Asia/Shanghai', 'time': '2026-04-15 10:30:00', 'weekday': 'Wednesday', 'source': 'mock_repeatable_time'}, 'error': None}}, {'tool': 'calculator', 'args': {'expression': '(23+7)*3'}, 'result': {'ok': True, 'data': {'expression': '(23+7)*3', 'result': 90}, 'error': None}}]",
+        "synthesizer: final_answer_built"
+      ]
+    }
+  },
+  {
+    "session_name": "day12_compare_weather_and_time",
+    "turn_index": 1,
+    "user": "先查北京天气，再告诉我上海现在几点。",
+    "result": {
+      "user_input": "先查北京天气，再告诉我上海现在几点。",
+      "plan": {
+        "tool": "multistep",
+        "steps": [
+          {
+            "tool": "get_weather",
+            "args": {
+              "city": "北京"
+            }
+          },
+          {
+            "tool": "get_time",
+            "args": {
+              "city": "上海"
+            }
+          }
+        ],
+        "route_source": "heuristic_multistep"
+      },
+      "tool_results": [
+        {
+          "tool": "get_weather",
+          "args": {
+            "city": "北京"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "city": "北京",
+              "temperature_c": 24.8,
+              "windspeed_kmh": 17.1,
+              "source": "mock_repeatable_weather"
+            },
+            "error": null
+          }
+        },
+        {
+          "tool": "get_time",
+          "args": {
+            "city": "上海"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "city": "上海",
+              "timezone": "Asia/Shanghai",
+              "time": "2026-04-15 10:30:00",
+              "weekday": "Wednesday",
+              "source": "mock_repeatable_time"
+            },
+            "error": null
+          }
+        }
+      ],
+      "final_answer": "[LangGraph POC] get_weather => {'ok': True, 'data': {'city': '北京', 'temperature_c': 24.8, 'windspeed_kmh': 17.1, 'source': 'mock_repeatable_weather'}, 'error': None} | get_time => {'ok': True, 'data': {'city': '上海', 'timezone': 'Asia/Shanghai', 'time': '2026-04-15 10:30:00', 'weekday': 'Wednesday', 'source': 'mock_repeatable_time'}, 'error': None}",
+      "debug_trace": [
+        "planner: {'tool': 'multistep', 'steps': [{'tool': 'get_weather', 'args': {'city': '北京'}}, {'tool': 'get_time', 'args': {'city': '上海'}}], 'route_source': 'heuristic_multistep'}",
+        "executor: [{'tool': 'get_weather', 'args': {'city': '北京'}, 'result': {'ok': True, 'data': {'city': '北京', 'temperature_c': 24.8, 'windspeed_kmh': 17.1, 'source': 'mock_repeatable_weather'}, 'error': None}}, {'tool': 'get_time', 'args': {'city': '上海'}, 'result': {'ok': True, 'data': {'city': '上海', 'timezone': 'Asia/Shanghai', 'time': '2026-04-15 10:30:00', 'weekday': 'Wednesday', 'source': 'mock_repeatable_time'}, 'error': None}}]",
+        "synthesizer: final_answer_built"
+      ]
+    }
+  },
+  {
+    "session_name": "day12_compare_partial_failure",
+    "turn_index": 1,
+    "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+    "result": {
+      "user_input": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+      "plan": {
+        "tool": "multistep",
+        "steps": [
+          {
+            "tool": "get_weather",
+            "args": {
+              "city": "北京"
+            }
+          },
+          {
+            "tool": "calculator",
+            "args": {
+              "expression": "(23+7)*3"
+            }
+          }
+        ],
+        "route_source": "heuristic_multistep"
+      },
+      "tool_results": [
+        {
+          "tool": "get_weather",
+          "args": {
+            "city": "北京"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "city": "北京",
+              "temperature_c": 24.8,
+              "windspeed_kmh": 17.1,
+              "source": "mock_repeatable_weather"
+            },
+            "error": null
+          }
+        },
+        {
+          "tool": "calculator",
+          "args": {
+            "expression": "(23+7)*3"
+          },
+          "result": {
+            "ok": true,
+            "data": {
+              "expression": "(23+7)*3",
+              "result": 90
+            },
+            "error": null
+          }
+        }
+      ],
+      "final_answer": "[LangGraph POC] get_weather => {'ok': True, 'data': {'city': '北京', 'temperature_c': 24.8, 'windspeed_kmh': 17.1, 'source': 'mock_repeatable_weather'}, 'error': None} | calculator => {'ok': True, 'data': {'expression': '(23+7)*3', 'result': 90}, 'error': None}",
+      "debug_trace": [
+        "planner: {'tool': 'multistep', 'steps': [{'tool': 'get_weather', 'args': {'city': '北京'}}, {'tool': 'calculator', 'args': {'expression': '(23+7)*3'}}], 'route_source': 'heuristic_multistep'}",
+        "executor: [{'tool': 'get_weather', 'args': {'city': '北京'}, 'result': {'ok': True, 'data': {'city': '北京', 'temperature_c': 24.8, 'windspeed_kmh': 17.1, 'source': 'mock_repeatable_weather'}, 'error': None}}, {'tool': 'calculator', 'args': {'expression': '(23+7)*3'}, 'result': {'ok': True, 'data': {'expression': '(23+7)*3', 'result': 90}, 'error': None}}]",
+        "synthesizer: final_answer_built"
+      ]
+    }
+  }
+]
