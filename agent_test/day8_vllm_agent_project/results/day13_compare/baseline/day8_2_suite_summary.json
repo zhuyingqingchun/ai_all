@@ -1,0 +1,192 @@
+{
+  "model": "next80b_fp8",
+  "main": {
+    "total_turns": 8,
+    "passed_turns": 8,
+    "pass_rate": 1.0,
+    "avg_latency_ms": {
+      "planning": 0.0,
+      "answer": 388.56,
+      "summary": 0.0
+    },
+    "avg_steps_per_turn": 2.0,
+    "by_step_tool": {
+      "get_time": {
+        "total": 6,
+        "passed": 6,
+        "pass_rate": 1.0
+      },
+      "calculator": {
+        "total": 5,
+        "passed": 4,
+        "pass_rate": 0.8
+      },
+      "get_weather": {
+        "total": 5,
+        "passed": 3,
+        "pass_rate": 0.6
+      }
+    },
+    "by_tag": {
+      "day13": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      },
+      "time": {
+        "total": 6,
+        "passed": 6,
+        "pass_rate": 1.0
+      },
+      "calculator": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 1.0
+      },
+      "multistep": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      },
+      "weather": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 1.0
+      },
+      "partial_failure": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "boundary": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "regex_like": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "unsupported": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      }
+    },
+    "by_failure_type": {},
+    "by_route_source": {
+      "heuristic_multistep_patch": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      }
+    }
+  },
+  "regression": {
+    "total_turns": 8,
+    "passed_turns": 8,
+    "pass_rate": 1.0,
+    "avg_latency_ms": {
+      "planning": 0.0,
+      "answer": 350.7,
+      "summary": 0.0
+    },
+    "avg_steps_per_turn": 2.0,
+    "by_step_tool": {
+      "get_time": {
+        "total": 6,
+        "passed": 6,
+        "pass_rate": 1.0
+      },
+      "calculator": {
+        "total": 5,
+        "passed": 4,
+        "pass_rate": 0.8
+      },
+      "get_weather": {
+        "total": 5,
+        "passed": 3,
+        "pass_rate": 0.6
+      }
+    },
+    "by_tag": {
+      "day13": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      },
+      "time": {
+        "total": 6,
+        "passed": 6,
+        "pass_rate": 1.0
+      },
+      "calculator": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 1.0
+      },
+      "multistep": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      },
+      "weather": {
+        "total": 3,
+        "passed": 3,
+        "pass_rate": 1.0
+      },
+      "partial_failure": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "boundary": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "regex_like": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      },
+      "unsupported": {
+        "total": 1,
+        "passed": 1,
+        "pass_rate": 1.0
+      }
+    },
+    "by_failure_type": {},
+    "by_route_source": {
+      "heuristic_multistep_patch": {
+        "total": 8,
+        "passed": 8,
+        "pass_rate": 1.0
+      }
+    }
+  },
+  "gates": {
+    "main": {
+      "min_pass_rate": 0.875,
+      "actual_pass_rate": 1.0,
+      "pass_rate_ok": true,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": true,
+      "passed": true
+    },
+    "regression": {
+      "min_pass_rate": 1.0,
+      "actual_pass_rate": 1.0,
+      "pass_rate_ok": true,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": true,
+      "passed": true
+    },
+    "overall_passed": true
+  }
+}

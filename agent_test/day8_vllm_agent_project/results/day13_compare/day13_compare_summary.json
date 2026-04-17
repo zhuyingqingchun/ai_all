@@ -1,0 +1,26 @@
+{
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day13_langgraph_compare_extended.json",
+  "model": "next80b_fp8",
+  "session_count": 8,
+  "turn_count": 8,
+  "baseline": {
+    "returncode": 0,
+    "passed": true,
+    "stdout_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day13_compare/baseline/stdout.txt",
+    "stderr_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day13_compare/baseline/stderr.txt",
+    "output_dir": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day13_compare/baseline"
+  },
+  "langgraph": {
+    "passed": true,
+    "count": 8,
+    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day13_compare/langgraph_results.json",
+    "langgraph_answer_nonempty_count": 8,
+    "langgraph_debug_trace_count": 8,
+    "heuristic_tool_mentions": {
+      "get_weather": 5,
+      "get_time": 6,
+      "calculator": 3
+    }
+  },
+  "overall_passed": true
+}

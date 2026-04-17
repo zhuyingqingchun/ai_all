@@ -1,0 +1,114 @@
+[
+  {
+    "session_name": "day13_time_and_calc",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+        "tags": [
+          "day13",
+          "time",
+          "calculator",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_weather_and_time",
+    "turns": [
+      {
+        "user": "先查北京天气，再告诉我上海现在几点。",
+        "tags": [
+          "day13",
+          "weather",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_partial_failure",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "tags": [
+          "day13",
+          "partial_failure",
+          "boundary",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_double_calc",
+    "turns": [
+      {
+        "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+        "tags": [
+          "day13",
+          "calculator",
+          "regex_like",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_weather_then_time_other_city",
+    "turns": [
+      {
+        "user": "先查上海天气，再告诉我东京现在几点。",
+        "tags": [
+          "day13",
+          "weather",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_time_then_weather",
+    "turns": [
+      {
+        "user": "先告诉我纽约现在几点，再查北京天气。",
+        "tags": [
+          "day13",
+          "time",
+          "weather",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_unsupported_then_time",
+    "turns": [
+      {
+        "user": "先查火星天气，再告诉我东京现在几点。",
+        "tags": [
+          "day13",
+          "unsupported",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  },
+  {
+    "session_name": "day13_calc_then_time",
+    "turns": [
+      {
+        "user": "先算 144/12，再告诉我上海现在几点。",
+        "tags": [
+          "day13",
+          "calculator",
+          "time",
+          "multistep"
+        ]
+      }
+    ]
+  }
+]
