@@ -1,5 +1,5 @@
 {
-  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day16_langgraph_parity_subset.json",
+  "dataset": "datasets/day16_langgraph_parity_subset.json",
   "model": "next80b_fp8",
   "baseline": {
     "summary": {
@@ -8,7 +8,7 @@
       "pass_rate": 1.0,
       "avg_latency_ms": {
         "planning": 0.0,
-        "answer": 572.02,
+        "answer": 361.44,
         "summary": 0.0
       },
       "avg_steps_per_turn": 2.0,
@@ -20,8 +20,8 @@
         },
         "calculator": {
           "total": 4,
-          "passed": 3,
-          "pass_rate": 0.75
+          "passed": 4,
+          "pass_rate": 1.0
         },
         "get_weather": {
           "total": 2,
@@ -90,8 +90,8 @@
       "forbidden_failure_types_ok": true,
       "passed": true
     },
-    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/baseline/baseline_results.json",
-    "trace_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/baseline/baseline_traces.jsonl"
+    "results_file": "results/day16_langgraph_parity/baseline/baseline_results.json",
+    "trace_file": "results/day16_langgraph_parity/baseline/baseline_traces.jsonl"
   },
   "langgraph": {
     "summary": {
@@ -100,7 +100,7 @@
       "pass_rate": 1.0,
       "avg_latency_ms": {
         "planning": 0.0,
-        "answer": 527.12,
+        "answer": 313.34,
         "summary": 0.0
       },
       "avg_steps_per_turn": 2.0,
@@ -112,8 +112,8 @@
         },
         "calculator": {
           "total": 4,
-          "passed": 3,
-          "pass_rate": 0.75
+          "passed": 4,
+          "pass_rate": 1.0
         },
         "get_weather": {
           "total": 2,
@@ -182,8 +182,8 @@
       "forbidden_failure_types_ok": true,
       "passed": true
     },
-    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/langgraph/langgraph_results.json",
-    "trace_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/langgraph/langgraph_traces.jsonl"
+    "results_file": "results/day16_langgraph_parity/langgraph/langgraph_results.json",
+    "trace_file": "results/day16_langgraph_parity/langgraph/langgraph_traces.jsonl"
   },
   "parity": {
     "pass_rate_delta": 0.0,

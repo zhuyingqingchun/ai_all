@@ -4,7 +4,7 @@
   "pass_rate": 1.0,
   "avg_latency_ms": {
     "planning": 0.0,
-    "answer": 527.12,
+    "answer": 313.34,
     "summary": 0.0
   },
   "avg_steps_per_turn": 2.0,
@@ -16,8 +16,8 @@
     },
     "calculator": {
       "total": 4,
-      "passed": 3,
-      "pass_rate": 0.75
+      "passed": 4,
+      "pass_rate": 1.0
     },
     "get_weather": {
       "total": 2,

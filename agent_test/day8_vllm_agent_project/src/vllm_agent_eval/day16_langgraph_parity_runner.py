@@ -22,6 +22,13 @@ def _load_dataset(dataset_path: Path) -> List[Dict[str, Any]]:
     return json.loads(dataset_path.read_text(encoding="utf-8"))
 
 
+def _display_path(path: Path, project_root: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(project_root.resolve()))
+    except Exception:
+        return str(path)
+
+
 def _suite_gate(summary: Dict[str, Any], *, min_pass_rate: float, forbid_failure_types: List[str] | None = None) -> Dict[str, Any]:
     forbid_failure_types = forbid_failure_types or []
     pass_rate_ok = summary.get("pass_rate", 0.0) >= min_pass_rate
@@ -41,6 +48,7 @@ def run_baseline(
     *,
     dataset_path: Path,
     output_dir: Path,
+    project_root: Path,
     base_url: str,
     api_key: str,
     model: str,
@@ -53,18 +61,15 @@ def run_baseline(
     evaluator = MultiStepAgentEvaluator(chat_client=client, debug=debug)
     traces = evaluator.run_dataset(data)
     summary = aggregate_stats(traces)
-    save_outputs(
-        traces,
-        summary,
-        output_dir / "baseline_results.json",
-        output_dir / "baseline_traces.jsonl",
-    )
+    results_path = output_dir / "baseline_results.json"
+    trace_path = output_dir / "baseline_traces.jsonl"
+    save_outputs(traces, summary, results_path, trace_path)
     gate = _suite_gate(summary, min_pass_rate=1.0, forbid_failure_types=["plan_error"])
     return {
         "summary": summary,
         "gate": gate,
-        "results_file": str(output_dir / "baseline_results.json"),
-        "trace_file": str(output_dir / "baseline_traces.jsonl"),
+        "results_file": _display_path(results_path, project_root),
+        "trace_file": _display_path(trace_path, project_root),
     }
 
 
@@ -72,6 +77,7 @@ def run_langgraph_parity(
     *,
     dataset_path: Path,
     output_dir: Path,
+    project_root: Path,
     base_url: str,
     api_key: str,
     model: str,
@@ -127,18 +133,15 @@ def run_langgraph_parity(
             traces.append(evaluate_trace(trace, turn_spec))
 
     summary = aggregate_stats(traces)
-    save_outputs(
-        traces,
-        summary,
-        output_dir / "langgraph_results.json",
-        output_dir / "langgraph_traces.jsonl",
-    )
+    results_path = output_dir / "langgraph_results.json"
+    trace_path = output_dir / "langgraph_traces.jsonl"
+    save_outputs(traces, summary, results_path, trace_path)
     gate = _suite_gate(summary, min_pass_rate=1.0, forbid_failure_types=["plan_error"])
     return {
         "summary": summary,
         "gate": gate,
-        "results_file": str(output_dir / "langgraph_results.json"),
-        "trace_file": str(output_dir / "langgraph_traces.jsonl"),
+        "results_file": _display_path(results_path, project_root),
+        "trace_file": _display_path(trace_path, project_root),
     }
 
 
@@ -154,10 +157,12 @@ def run_day16_langgraph_parity(
     output_dir.mkdir(parents=True, exist_ok=True)
     baseline_dir = output_dir / "baseline"
     langgraph_dir = output_dir / "langgraph"
+    project_root = dataset_path.resolve().parents[1]
 
     baseline = run_baseline(
         dataset_path=dataset_path,
         output_dir=baseline_dir,
+        project_root=project_root,
         base_url=base_url,
         api_key=api_key,
         model=model,
@@ -166,6 +171,7 @@ def run_day16_langgraph_parity(
     langgraph = run_langgraph_parity(
         dataset_path=dataset_path,
         output_dir=langgraph_dir,
+        project_root=project_root,
         base_url=base_url,
         api_key=api_key,
         model=model,
@@ -184,7 +190,7 @@ def run_day16_langgraph_parity(
     }
 
     summary = {
-        "dataset": str(dataset_path),
+        "dataset": _display_path(dataset_path, project_root),
         "model": model,
         "baseline": baseline,
         "langgraph": langgraph,
