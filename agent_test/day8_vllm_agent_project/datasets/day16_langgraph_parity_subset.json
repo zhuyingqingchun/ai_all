@@ -1,0 +1,50 @@
+[
+  {
+    "session_name": "day16_time_and_calc",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算一下(23+7)*3。",
+        "acceptable_tool_sequences": [["get_time", "calculator"]],
+        "expected_contains_all": ["东京"],
+        "expected_regex_any": ["\\b90\\b"],
+        "tags": ["day16", "parity", "time", "calculator", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day16_weather_and_time",
+    "turns": [
+      {
+        "user": "先查北京天气，再告诉我上海现在几点。",
+        "acceptable_tool_sequences": [["get_weather", "get_time"]],
+        "expected_contains_all": ["北京", "上海"],
+        "expected_regex_any": ["\\b\\d{1,2}:\\d{2}\\b"],
+        "tags": ["day16", "parity", "weather", "time", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day16_partial_failure",
+    "turns": [
+      {
+        "user": "先查南京天气，再算一下 12*12，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [["get_weather", "calculator"], ["calculator"]],
+        "expected_contains_all": ["南京", "144"],
+        "expected_contains_any": ["失败", "不支持", "无法"],
+        "forbidden_contains_any": ["未触发任何工具调用"],
+        "tags": ["day16", "parity", "partial_failure", "boundary", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day16_double_calc",
+    "turns": [
+      {
+        "user": "先算 23*7，再算 sqrt(81)，最后告诉我两个结果。",
+        "acceptable_tool_sequences": [["calculator", "calculator"]],
+        "expected_regex_all": ["161", "\\b9\\b"],
+        "tags": ["day16", "parity", "calculator", "multistep"]
+      }
+    ]
+  }
+]

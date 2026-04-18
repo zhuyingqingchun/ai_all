@@ -1,0 +1,193 @@
+{
+  "dataset": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/datasets/day16_langgraph_parity_subset.json",
+  "model": "next80b_fp8",
+  "baseline": {
+    "summary": {
+      "total_turns": 4,
+      "passed_turns": 4,
+      "pass_rate": 1.0,
+      "avg_latency_ms": {
+        "planning": 0.0,
+        "answer": 572.02,
+        "summary": 0.0
+      },
+      "avg_steps_per_turn": 2.0,
+      "by_step_tool": {
+        "get_time": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "calculator": {
+          "total": 4,
+          "passed": 3,
+          "pass_rate": 0.75
+        },
+        "get_weather": {
+          "total": 2,
+          "passed": 1,
+          "pass_rate": 0.5
+        }
+      },
+      "by_tag": {
+        "day16": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "parity": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "time": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "calculator": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "multistep": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "weather": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "partial_failure": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "boundary": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        }
+      },
+      "by_failure_type": {},
+      "by_route_source": {
+        "heuristic_multistep_patch": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        }
+      }
+    },
+    "gate": {
+      "min_pass_rate": 1.0,
+      "actual_pass_rate": 1.0,
+      "pass_rate_ok": true,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": true,
+      "passed": true
+    },
+    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/baseline/baseline_results.json",
+    "trace_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/baseline/baseline_traces.jsonl"
+  },
+  "langgraph": {
+    "summary": {
+      "total_turns": 4,
+      "passed_turns": 4,
+      "pass_rate": 1.0,
+      "avg_latency_ms": {
+        "planning": 0.0,
+        "answer": 527.12,
+        "summary": 0.0
+      },
+      "avg_steps_per_turn": 2.0,
+      "by_step_tool": {
+        "get_time": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "calculator": {
+          "total": 4,
+          "passed": 3,
+          "pass_rate": 0.75
+        },
+        "get_weather": {
+          "total": 2,
+          "passed": 1,
+          "pass_rate": 0.5
+        }
+      },
+      "by_tag": {
+        "day16": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "parity": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "time": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "calculator": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "multistep": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        },
+        "weather": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "partial_failure": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "boundary": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        }
+      },
+      "by_failure_type": {},
+      "by_route_source": {
+        "heuristic_multistep_patch": {
+          "total": 4,
+          "passed": 4,
+          "pass_rate": 1.0
+        }
+      }
+    },
+    "gate": {
+      "min_pass_rate": 1.0,
+      "actual_pass_rate": 1.0,
+      "pass_rate_ok": true,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": true,
+      "passed": true
+    },
+    "results_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/langgraph/langgraph_results.json",
+    "trace_file": "/mnt/PRO6000_disk/swd/agent/agent_test/day8_vllm_agent_project/results/day16_langgraph_parity/langgraph/langgraph_traces.jsonl"
+  },
+  "parity": {
+    "pass_rate_delta": 0.0,
+    "avg_steps_delta": 0.0,
+    "overall_gate_passed": true
+  }
+}
