@@ -32,6 +32,7 @@ agent_test/day8_vllm_agent_project/
 ├── datasets/                         # 实验数据集
 ├── results/                          # 实验结果输出
 ├── scripts/                          # 运行脚本
+├── skills/                           # 工具接入规范与 tool skills
 └── src/vllm_agent_eval/              # 评测框架源码
 ```
 
@@ -77,6 +78,7 @@ bash scripts/run_day17_tool_expansion.sh next80b_fp8
 | Day 16 | LangGraph parity migration 与 baseline 能力对齐 | ✅ |
 | Day 16.1 | planner 表达式清理、README 恢复、路径相对化修复 | ✅ |
 | Day 17 | deterministic 工具扩展：unit_convert / date_time_calc / structured_lookup | ✅ |
+| Day 17.1 | unit_convert planner 修复 + 工具接入规范 + skills 模板 | ✅ |
 
 ## Day 17 工具扩展说明
 
@@ -86,3 +88,11 @@ bash scripts/run_day17_tool_expansion.sh next80b_fp8
 3. `structured_lookup`：查询本地结构化配置表中的确定性条目
 
 这些工具都走本地 deterministic 路径，便于回归测试、断言设计和 baseline / LangGraph 公平对比。
+
+
+## Day 17.1 修复说明
+
+本轮修复与补充包含三部分：
+1. 修复 `split_multistep_clauses(...)`，让 `unit_convert / structured_lookup / date_time_calc` 子句也能进入 heuristic step 流程
+2. 补充工具接入规范文档，形成“代码接入 + planner 接入 + evaluator 接入 + 最小断言集 + skill 文档”的统一流程
+3. 新增 skills 模板与 Day 17 新工具的示例 skill，方便后续 Agent 更快掌握工具的参数和调用边界

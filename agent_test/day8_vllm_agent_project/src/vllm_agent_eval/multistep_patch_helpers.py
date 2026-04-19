@@ -84,6 +84,20 @@ def split_multistep_clauses(user_input: str) -> Tuple[List[str], str]:
                 final_parts.append(math_final_part)
             continue
 
+        if parse_unit_convert_clause(normalized_piece) is not None:
+            step_clauses.append(normalized_piece)
+            continue
+
+        if parse_structured_lookup_clause(normalized_piece) is not None:
+            step_clauses.append(normalized_piece)
+            continue
+
+        if has_any(normalized_piece, DATETIME_CALC_HINTS) and re.search(
+            r"(东京|北京|上海|深圳|广州|纽约|洛杉矶|旧金山)", normalized_piece
+        ):
+            step_clauses.append(normalized_piece)
+            continue
+
         if has_any(normalized_piece, WEATHER_HINTS) or has_any(normalized_piece, TIME_HINTS):
             step_clauses.append(normalized_piece)
             continue
