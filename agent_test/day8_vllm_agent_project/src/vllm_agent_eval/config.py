@@ -32,3 +32,30 @@ CITY_TIMEZONES = {
     "洛杉矶": "America/Los_Angeles",
     "旧金山": "America/Los_Angeles",
 }
+
+STRUCTURED_LOOKUP_TABLE = {
+    "servo_max_torque": {
+        "key": "servo_max_torque",
+        "value": "2.5 N·m",
+        "category": "servo_spec",
+        "source": "mock_structured_lookup",
+    },
+    "servo_nominal_voltage": {
+        "key": "servo_nominal_voltage",
+        "value": "28 V",
+        "category": "servo_spec",
+        "source": "mock_structured_lookup",
+    },
+    "qwen2.5-7b_context_length": {
+        "key": "qwen2.5-7b_context_length",
+        "value": 32768,
+        "category": "model_profile",
+        "source": "mock_structured_lookup",
+    },
+    "next80b_fp8_context_length": {
+        "key": "next80b_fp8_context_length",
+        "value": 65536,
+        "category": "model_profile",
+        "source": "mock_structured_lookup",
+    },
+}

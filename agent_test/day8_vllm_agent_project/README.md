@@ -2,11 +2,12 @@
 
 ## 项目简介
 
-本项目是一个针对 vLLM Agent 的多步评估框架，当前主线已经从 Day 8 推进到 Day 16.1。
+本项目是一个针对 vLLM Agent 的多步评估框架，当前主线已经从 Day 8 推进到 Day 17。
 核心目标：
 1. 构建多步工具调用评估链路（planner → executor → synthesizer）
 2. 探索 LangGraph 作为替代执行后端的可行性
 3. 在同一数据集与同一 gate 下完成 baseline 与 LangGraph parity 对齐
+4. 扩展 deterministic 工具集合，提升可评测的工具推理能力
 
 ## 环境信息
 
@@ -57,6 +58,11 @@ bash scripts/run_day15_langgraph_formal.sh next80b_fp8
 bash scripts/run_day16_langgraph_parity.sh next80b_fp8
 ```
 
+### 运行 Day 17 工具扩展实验
+```bash
+bash scripts/run_day17_tool_expansion.sh next80b_fp8
+```
+
 ## 开发里程碑
 
 | 阶段 | 内容 | 状态 |
@@ -70,10 +76,13 @@ bash scripts/run_day16_langgraph_parity.sh next80b_fp8
 | Day 15 | LangGraph 正式迁移实验（4 样本 + 断言检查） | ✅ |
 | Day 16 | LangGraph parity migration 与 baseline 能力对齐 | ✅ |
 | Day 16.1 | planner 表达式清理、README 恢复、路径相对化修复 | ✅ |
+| Day 17 | deterministic 工具扩展：unit_convert / date_time_calc / structured_lookup | ✅ |
 
-## Day 16.1 修复说明
+## Day 17 工具扩展说明
 
-本轮修复包含三项内容：
-1. 修复数学 step 与 final-only hint 混入同一 clause 时的表达式污染问题
-2. 恢复项目 README，避免远程仓库缺少说明文档
-3. 将 Day 16 parity summary 中的本地绝对路径改为相对路径，提升可移植性
+本轮扩展包含三类新工具：
+1. `unit_convert`：支持速度、质量、长度、温度等确定性单位换算
+2. `date_time_calc`：基于 mock 城市时间做小时/天偏移计算
+3. `structured_lookup`：查询本地结构化配置表中的确定性条目
+
+这些工具都走本地 deterministic 路径，便于回归测试、断言设计和 baseline / LangGraph 公平对比。

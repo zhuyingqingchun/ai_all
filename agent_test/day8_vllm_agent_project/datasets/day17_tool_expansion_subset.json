@@ -1,0 +1,61 @@
+[
+  {
+    "session_name": "day17_unit_convert_and_calc",
+    "turns": [
+      {
+        "user": "先把 72 km/h 转成 m/s，再算 20*5，并告诉我两个结果。",
+        "acceptable_tool_sequences": [["unit_convert", "calculator"]],
+        "expected_regex_all": ["\\b20(?:\\.0+)?\\b", "\\b100(?:\\.0+)?\\b"],
+        "tags": ["day17", "tools", "unit_convert", "calculator", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day17_time_and_datetime_calc",
+    "turns": [
+      {
+        "user": "先告诉我东京现在几点，再算东京 3 小时后是几点。",
+        "acceptable_tool_sequences": [["get_time", "date_time_calc"]],
+        "expected_contains_all": ["东京"],
+        "expected_regex_all": ["\\b11:30\\b", "\\b14:30\\b"],
+        "tags": ["day17", "tools", "time", "date_time_calc", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day17_lookup_and_convert",
+    "turns": [
+      {
+        "user": "先查一下 servo_max_torque 的配置值，再把 2.5 kg 转成 g。",
+        "acceptable_tool_sequences": [["structured_lookup", "unit_convert"]],
+        "expected_contains_all": ["servo_max_torque"],
+        "expected_regex_all": ["2\\.5", "\\b2500(?:\\.0+)?\\b"],
+        "tags": ["day17", "tools", "structured_lookup", "unit_convert", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day17_lookup_and_calc",
+    "turns": [
+      {
+        "user": "先查一下 qwen2.5-7b_context_length 的配置值，再算 sqrt(144)。",
+        "acceptable_tool_sequences": [["structured_lookup", "calculator"]],
+        "expected_contains_all": ["qwen2.5-7b_context_length"],
+        "expected_regex_all": ["\\b32768\\b", "\\b12(?:\\.0+)?\\b"],
+        "tags": ["day17", "tools", "structured_lookup", "calculator", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day17_lookup_failure_and_convert",
+    "turns": [
+      {
+        "user": "先查一下 unknown_config 的配置值，再把 500 cm 转成 m，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [["structured_lookup", "unit_convert"]],
+        "expected_contains_all": ["unknown_config", "5"],
+        "expected_contains_any": ["失败", "未找到", "无法"],
+        "tags": ["day17", "tools", "structured_lookup", "unit_convert", "boundary", "multistep"]
+      }
+    ]
+  }
+]

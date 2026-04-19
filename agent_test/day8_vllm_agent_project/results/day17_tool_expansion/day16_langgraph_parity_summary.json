@@ -1,0 +1,227 @@
+{
+  "dataset": "datasets/day17_tool_expansion_subset.json",
+  "model": "next80b_fp8",
+  "baseline": {
+    "summary": {
+      "total_turns": 5,
+      "passed_turns": 2,
+      "pass_rate": 0.4,
+      "avg_latency_ms": {
+        "planning": 0.0,
+        "answer": 489.12,
+        "summary": 0.0
+      },
+      "avg_steps_per_turn": 1.0,
+      "by_step_tool": {
+        "calculator": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "get_time": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "date_time_calc": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "structured_lookup": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        }
+      },
+      "by_tag": {
+        "day17": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "tools": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "unit_convert": {
+          "total": 3,
+          "passed": 0,
+          "pass_rate": 0.0
+        },
+        "calculator": {
+          "total": 2,
+          "passed": 1,
+          "pass_rate": 0.5
+        },
+        "multistep": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "time": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "date_time_calc": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "structured_lookup": {
+          "total": 3,
+          "passed": 1,
+          "pass_rate": 0.3333
+        },
+        "boundary": {
+          "total": 1,
+          "passed": 0,
+          "pass_rate": 0.0
+        }
+      },
+      "by_failure_type": {
+        "plan_error": 3
+      },
+      "by_route_source": {
+        "heuristic_multistep_patch": {
+          "total": 3,
+          "passed": 2,
+          "pass_rate": 0.6667
+        },
+        "fallback_single_direct_answer": {
+          "total": 2,
+          "passed": 0,
+          "pass_rate": 0.0
+        }
+      }
+    },
+    "gate": {
+      "min_pass_rate": 1.0,
+      "actual_pass_rate": 0.4,
+      "pass_rate_ok": false,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": false,
+      "passed": false
+    },
+    "results_file": "results/day17_tool_expansion/baseline/baseline_results.json",
+    "trace_file": "results/day17_tool_expansion/baseline/baseline_traces.jsonl"
+  },
+  "langgraph": {
+    "summary": {
+      "total_turns": 5,
+      "passed_turns": 2,
+      "pass_rate": 0.4,
+      "avg_latency_ms": {
+        "planning": 0.0,
+        "answer": 378.41,
+        "summary": 0.0
+      },
+      "avg_steps_per_turn": 1.0,
+      "by_step_tool": {
+        "calculator": {
+          "total": 2,
+          "passed": 2,
+          "pass_rate": 1.0
+        },
+        "get_time": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "date_time_calc": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "structured_lookup": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        }
+      },
+      "by_tag": {
+        "day17": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "tools": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "unit_convert": {
+          "total": 3,
+          "passed": 0,
+          "pass_rate": 0.0
+        },
+        "calculator": {
+          "total": 2,
+          "passed": 1,
+          "pass_rate": 0.5
+        },
+        "multistep": {
+          "total": 5,
+          "passed": 2,
+          "pass_rate": 0.4
+        },
+        "time": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "date_time_calc": {
+          "total": 1,
+          "passed": 1,
+          "pass_rate": 1.0
+        },
+        "structured_lookup": {
+          "total": 3,
+          "passed": 1,
+          "pass_rate": 0.3333
+        },
+        "boundary": {
+          "total": 1,
+          "passed": 0,
+          "pass_rate": 0.0
+        }
+      },
+      "by_failure_type": {
+        "plan_error": 3
+      },
+      "by_route_source": {
+        "heuristic_multistep_patch": {
+          "total": 3,
+          "passed": 2,
+          "pass_rate": 0.6667
+        },
+        "fallback_single_direct_answer": {
+          "total": 2,
+          "passed": 0,
+          "pass_rate": 0.0
+        }
+      }
+    },
+    "gate": {
+      "min_pass_rate": 1.0,
+      "actual_pass_rate": 0.4,
+      "pass_rate_ok": false,
+      "forbid_failure_types": [
+        "plan_error"
+      ],
+      "forbidden_failure_types_ok": false,
+      "passed": false
+    },
+    "results_file": "results/day17_tool_expansion/langgraph/langgraph_results.json",
+    "trace_file": "results/day17_tool_expansion/langgraph/langgraph_traces.jsonl"
+  },
+  "parity": {
+    "pass_rate_delta": 0.0,
+    "avg_steps_delta": 0.0,
+    "overall_gate_passed": false
+  }
+}

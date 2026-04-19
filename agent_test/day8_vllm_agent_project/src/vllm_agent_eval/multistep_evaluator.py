@@ -43,7 +43,7 @@ def parse_multistep_json(plan_text: str) -> Dict[str, Any]:
             continue
         tool = step.get("tool")
         args = step.get("args", {})
-        if tool not in {"get_weather", "get_time", "calculator", "direct_answer"}:
+        if tool not in {"get_weather", "get_time", "calculator", "unit_convert", "date_time_calc", "structured_lookup", "direct_answer"}:
             continue
         if not isinstance(args, dict):
             args = {}
@@ -136,7 +136,7 @@ def classify_multistep_failure(trace: MultiStepTurnTrace, turn_spec: Dict[str, A
     for step in trace.step_results:
         result = step.get("result")
         if result and result.get("ok") is False:
-            if any(k in trace.answer for k in ["失败", "暂不支持", "无法", "错误"]):
+            if any(k in trace.answer for k in ["失败", "暂不支持", "无法", "错误", "未找到"]):
                 break
             return False, "step_error", result.get("error")
     assertion_result = evaluate_text_assertions(

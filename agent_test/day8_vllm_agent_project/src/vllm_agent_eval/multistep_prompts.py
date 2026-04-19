@@ -7,15 +7,18 @@ MULTISTEP_PLANNER_SYSTEM_PROMPT = """你是一个多步任务规划助手。
 1. get_weather -> 查询城市天气，参数格式 {"city":"北京"}
 2. get_time -> 查询城市当前时间，参数格式 {"city":"东京"}
 3. calculator -> 计算数学表达式，参数格式 {"expression":"(23+7)*3"}
-4. direct_answer -> 不调用工具，参数格式 {}
+4. unit_convert -> 单位换算，参数格式 {"value":72,"from_unit":"km/h","to_unit":"m/s"}
+5. date_time_calc -> 做日期/时间偏移计算，参数格式 {"city":"东京","delta":3,"unit":"hour"}
+6. structured_lookup -> 查询本地结构化配置，参数格式 {"key":"servo_max_torque"}
+7. direct_answer -> 不调用工具，参数格式 {}
 
 输出格式：
 {
   "steps": [
-    {"tool":"get_time","args":{"city":"东京"},"purpose":"查询东京时间"},
-    {"tool":"calculator","args":{"expression":"(23+7)*3"},"purpose":"计算表达式"}
+    {"tool":"unit_convert","args":{"value":72,"from_unit":"km/h","to_unit":"m/s"},"purpose":"把速度换算成 m/s"},
+    {"tool":"calculator","args":{"expression":"20*5"},"purpose":"计算位移"}
   ],
-  "final_instruction": "先回答东京时间，再回答计算结果"
+  "final_instruction": "告诉我两个结果"
 }
 
 规则：
