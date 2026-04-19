@@ -1,0 +1,59 @@
+[
+  {
+    "session_name": "day18_search_and_calc",
+    "turns": [
+      {
+        "user": "先搜索 热降额，再算 95-20，并总结结论。",
+        "acceptable_tool_sequences": [["text_search", "calculator"]],
+        "expected_regex_all": ["\\b95(?:\\.0+)?\\b", "\\b75(?:\\.0+)?\\b"],
+        "tags": ["day18", "retrieval", "text_search", "calculator", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day18_note_lookup_and_convert",
+    "turns": [
+      {
+        "user": "先查一下 servo_thermal_limit_note 这条笔记，再把 95 °C 转成 °F。",
+        "acceptable_tool_sequences": [["note_lookup", "unit_convert"]],
+        "expected_contains_any": ["95", "热降额", "203"],
+        "expected_regex_all": ["\\b203(?:\\.0+)?\\b"],
+        "tags": ["day18", "retrieval", "note_lookup", "unit_convert", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day18_search_and_note_lookup",
+    "turns": [
+      {
+        "user": "先搜索 offboard failsafe，再查一下 px4_offboard_requirements_note 这条笔记。",
+        "acceptable_tool_sequences": [["text_search", "note_lookup"]],
+        "expected_contains_any": ["failsafe", "setpoint", "Offboard"],
+        "tags": ["day18", "retrieval", "text_search", "note_lookup", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day18_lookup_failure_and_search",
+    "turns": [
+      {
+        "user": "先查一下 unknown_note 这条笔记，再搜索 电池预热，并说明哪一步失败了。",
+        "acceptable_tool_sequences": [["note_lookup", "text_search"]],
+        "expected_contains_all": ["unknown_note", "20"],
+        "expected_contains_any": ["失败", "未找到", "无法"],
+        "tags": ["day18", "retrieval", "note_lookup", "text_search", "boundary", "multistep"]
+      }
+    ]
+  },
+  {
+    "session_name": "day18_search_and_structured_lookup",
+    "turns": [
+      {
+        "user": "先搜索 上下文长度，再查一下 next80b_fp8_context_length 的配置值。",
+        "acceptable_tool_sequences": [["text_search", "structured_lookup"]],
+        "expected_regex_all": ["\\b65536\\b"],
+        "tags": ["day18", "retrieval", "text_search", "structured_lookup", "multistep"]
+      }
+    ]
+  }
+]

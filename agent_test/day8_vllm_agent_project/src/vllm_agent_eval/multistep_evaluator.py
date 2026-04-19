@@ -43,7 +43,7 @@ def parse_multistep_json(plan_text: str) -> Dict[str, Any]:
             continue
         tool = step.get("tool")
         args = step.get("args", {})
-        if tool not in {"get_weather", "get_time", "calculator", "unit_convert", "date_time_calc", "structured_lookup", "direct_answer"}:
+        if tool not in {"get_weather", "get_time", "calculator", "unit_convert", "date_time_calc", "structured_lookup", "text_search", "note_lookup", "direct_answer"}:
             continue
         if not isinstance(args, dict):
             args = {}

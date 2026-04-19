@@ -59,3 +59,34 @@ STRUCTURED_LOOKUP_TABLE = {
         "source": "mock_structured_lookup",
     },
 }
+
+NOTE_LOOKUP_TABLE = {
+    "servo_thermal_limit_note": {
+        "id": "servo_thermal_limit_note",
+        "title": "舵机热降额说明",
+        "content": "舵机在 95 °C 开始热降额，110 °C 触发停机保护。",
+        "tags": ["热降额", "温度", "舵机"],
+        "source": "mock_note_lookup",
+    },
+    "px4_offboard_requirements_note": {
+        "id": "px4_offboard_requirements_note",
+        "title": "PX4 Offboard 模式要求",
+        "content": "Offboard 模式需要持续发送 setpoint 和心跳，setpoint 中断可能触发 failsafe。",
+        "tags": ["PX4", "Offboard", "failsafe", "setpoint"],
+        "source": "mock_note_lookup",
+    },
+    "battery_warmup_note": {
+        "id": "battery_warmup_note",
+        "title": "电池预热建议",
+        "content": "高负载放电前建议电池温度保持在 20 °C 以上。",
+        "tags": ["电池", "预热", "温度"],
+        "source": "mock_note_lookup",
+    },
+    "next80b_context_note": {
+        "id": "next80b_context_note",
+        "title": "Next80B 上下文长度说明",
+        "content": "next80b_fp8 的默认上下文长度为 65536 tokens。",
+        "tags": ["上下文长度", "next80b_fp8", "tokens"],
+        "source": "mock_note_lookup",
+    },
+}

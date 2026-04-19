@@ -10,7 +10,9 @@ MULTISTEP_PLANNER_SYSTEM_PROMPT = """你是一个多步任务规划助手。
 4. unit_convert -> 单位换算，参数格式 {"value":72,"from_unit":"km/h","to_unit":"m/s"}
 5. date_time_calc -> 做日期/时间偏移计算，参数格式 {"city":"东京","delta":3,"unit":"hour"}
 6. structured_lookup -> 查询本地结构化配置，参数格式 {"key":"servo_max_torque"}
-7. direct_answer -> 不调用工具，参数格式 {}
+7. text_search -> 在本地笔记语料中搜索，参数格式 {"query":"热降额","top_k":3}
+8. note_lookup -> 精确读取单条笔记，参数格式 {"note_id":"servo_thermal_limit_note"}
+9. direct_answer -> 不调用工具，参数格式 {}
 
 输出格式：
 {
@@ -20,6 +22,8 @@ MULTISTEP_PLANNER_SYSTEM_PROMPT = """你是一个多步任务规划助手。
   ],
   "final_instruction": "告诉我两个结果"
 }
+
+也可以输出检索型步骤，例如 {"tool":"text_search","args":{"query":"offboard failsafe","top_k":3},"purpose":"搜索相关笔记"}。
 
 规则：
 - 优先拆成有顺序的工具步骤

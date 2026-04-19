@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import Any, Dict, List, Optional, Tuple
 
-from .config import STRUCTURED_LOOKUP_TABLE
+from .config import NOTE_LOOKUP_TABLE, STRUCTURED_LOOKUP_TABLE
 
 # 这份 helper 只解决 Day 8 多步实验的 planner 问题：
 # 1) 子句切分
@@ -19,6 +19,8 @@ WEATHER_HINTS = ["天气", "气温", "温度", "风速", "下雨", "冷不冷", 
 UNIT_HINTS = ["转成", "换算", "换成", "转换成", "转换为", "转为"]
 LOOKUP_HINTS = ["配置值", "配置", "参数", "上下文长度", "context"]
 DATETIME_CALC_HINTS = ["小时后", "小时前", "天后", "天前", "几号", "日期"]
+SEARCH_HINTS = ["搜索", "检索", "搜一下", "搜一搜", "搜索一下", "检索一下", "在笔记里找", "查找笔记"]
+NOTE_HINTS = ["笔记", "note", "记录"]
 UNIT_PATTERN = re.compile(
     r"(?P<value>-?\d+(?:\.\d+)?)\s*(?P<from_unit>km/h|m/s|kg|g|cm|m|℃|°C|°F|C|F)\s*(?:转成|换算成|换成|转换成|转换为|转为)\s*(?P<to_unit>km/h|m/s|kg|g|cm|m|℃|°C|°F|C|F)",
     flags=re.IGNORECASE,
@@ -85,6 +87,14 @@ def split_multistep_clauses(user_input: str) -> Tuple[List[str], str]:
             continue
 
         if parse_unit_convert_clause(normalized_piece) is not None:
+            step_clauses.append(normalized_piece)
+            continue
+
+        if parse_note_lookup_clause(normalized_piece) is not None:
+            step_clauses.append(normalized_piece)
+            continue
+
+        if parse_text_search_clause(normalized_piece) is not None:
             step_clauses.append(normalized_piece)
             continue
 
@@ -191,6 +201,42 @@ def parse_unit_convert_clause(clause: str) -> Optional[Dict[str, Any]]:
     }
 
 
+def parse_text_search_clause(clause: str) -> Optional[Dict[str, Any]]:
+    if not has_any(clause, SEARCH_HINTS):
+        return None
+    for prefix in ["搜索一下", "搜索", "检索一下", "检索", "搜一下", "搜一搜", "在笔记里找", "查找笔记"]:
+        if prefix in clause:
+            query = clause.split(prefix, 1)[1].strip(" ：:，。；;、")
+            query = FINAL_SUFFIX_RE.sub("", query).strip(" ，。；;、")
+            if query:
+                return {
+                    "tool": "text_search",
+                    "args": {"query": query, "top_k": 3},
+                    "route_source": "heuristic_multistep_clause_text_search",
+                }
+    return None
+
+
+def parse_note_lookup_clause(clause: str) -> Optional[Dict[str, Any]]:
+    if not (has_any(clause, NOTE_HINTS) or "_note" in clause):
+        return None
+    for key in sorted(NOTE_LOOKUP_TABLE.keys(), key=len, reverse=True):
+        if key in clause:
+            return {
+                "tool": "note_lookup",
+                "args": {"note_id": key},
+                "route_source": "heuristic_multistep_clause_note_lookup",
+            }
+    token_match = re.search(r"([A-Za-z0-9._-]+_note)", clause)
+    if token_match:
+        return {
+            "tool": "note_lookup",
+            "args": {"note_id": token_match.group(1)},
+            "route_source": "heuristic_multistep_clause_note_lookup",
+        }
+    return None
+
+
 def parse_date_time_calc_clause(clause: str, time_cities: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     city = extract_city_from_clause(clause, time_cities)
     match = re.search(r"(\d+)\s*(小时|天)\s*(后|前)", clause)
@@ -233,6 +279,14 @@ def classify_clause_to_step(clause: str, weather_cities: Dict[str, Any], time_ci
     clause = normalize_clause_text(clause)
     if not clause:
         return None
+
+    note_step = parse_note_lookup_clause(clause)
+    if note_step is not None:
+        return note_step
+
+    search_step = parse_text_search_clause(clause)
+    if search_step is not None:
+        return search_step
 
     unit_step = parse_unit_convert_clause(clause)
     if unit_step is not None:

@@ -5,9 +5,14 @@ import math
 import operator
 import time
 from datetime import datetime, timedelta
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, List, Tuple
 
-from .config import CITY_COORDS, CITY_TIMEZONES, STRUCTURED_LOOKUP_TABLE
+from .config import (
+    CITY_COORDS,
+    CITY_TIMEZONES,
+    NOTE_LOOKUP_TABLE,
+    STRUCTURED_LOOKUP_TABLE,
+)
 
 _ALLOWED_BIN_OPS = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv, ast.FloorDiv: operator.floordiv, ast.Mod: operator.mod, ast.Pow: operator.pow}
 _ALLOWED_UNARY_OPS = {ast.UAdd: operator.pos, ast.USub: operator.neg}
@@ -109,6 +114,25 @@ def _get_city_datetime(city: str) -> datetime:
     return datetime.strptime(_FAKE_CITY_TIMES[city], "%Y-%m-%d %H:%M:%S")
 
 
+def _normalize_search_tokens(query: str) -> List[str]:
+    query = (query or "").strip().lower()
+    if not query:
+        return []
+    tokens = [token for token in query.split() if token]
+    return tokens or [query]
+
+
+def _score_note(query_tokens: List[str], note: Dict[str, Any]) -> int:
+    haystack = " ".join(
+        [
+            str(note.get("title", "")),
+            str(note.get("content", "")),
+            " ".join(str(tag) for tag in note.get("tags", [])),
+        ]
+    ).lower()
+    return sum(1 for token in query_tokens if token in haystack)
+
+
 class LocalTools:
     def get_weather(self, city: str) -> Dict[str, Any]:
         if not city or not city.strip():
@@ -190,6 +214,42 @@ class LocalTools:
             return {"ok": False, "data": None, "error": f"未找到配置项：{key}"}
         return {"ok": True, "data": item, "error": None}
 
+    def text_search(self, query: str, top_k: int = 3) -> Dict[str, Any]:
+        query = (query or "").strip()
+        if not query:
+            return {"ok": False, "data": None, "error": "query 不能为空"}
+        query_tokens = _normalize_search_tokens(query)
+        hits = []
+        for note_id, note in NOTE_LOOKUP_TABLE.items():
+            score = _score_note(query_tokens, note)
+            if score > 0:
+                hits.append(
+                    {
+                        "id": note_id,
+                        "title": note.get("title", ""),
+                        "content": note.get("content", ""),
+                        "tags": list(note.get("tags", [])),
+                        "score": score,
+                    }
+                )
+        hits.sort(key=lambda item: (-item["score"], item["id"]))
+        if not hits:
+            return {"ok": False, "data": None, "error": f"未找到与查询相关的笔记：{query}"}
+        return {
+            "ok": True,
+            "data": {"query": query, "hits": hits[: max(int(top_k), 1)], "source": "mock_text_search"},
+            "error": None,
+        }
+
+    def note_lookup(self, note_id: str) -> Dict[str, Any]:
+        note_id = (note_id or "").strip()
+        if not note_id:
+            return {"ok": False, "data": None, "error": "note_id 不能为空"}
+        item = NOTE_LOOKUP_TABLE.get(note_id)
+        if item is None:
+            return {"ok": False, "data": None, "error": f"未找到笔记：{note_id}"}
+        return {"ok": True, "data": item, "error": None}
+
     def call(self, tool_name: str, args: Dict[str, Any]) -> Tuple[Dict[str, Any], float]:
         start = time.perf_counter()
         if tool_name == "get_weather":
@@ -204,6 +264,10 @@ class LocalTools:
             result = self.date_time_calc(args.get("city", ""), args.get("delta", 0), args.get("unit", "hour"))
         elif tool_name == "structured_lookup":
             result = self.structured_lookup(args.get("key", ""))
+        elif tool_name == "text_search":
+            result = self.text_search(args.get("query", ""), args.get("top_k", 3))
+        elif tool_name == "note_lookup":
+            result = self.note_lookup(args.get("note_id", ""))
         else:
             result = {"ok": False, "data": None, "error": f"unknown tool: {tool_name}"}
         return result, round((time.perf_counter() - start) * 1000, 2)

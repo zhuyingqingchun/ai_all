@@ -1,0 +1,93 @@
+{
+  "total_turns": 5,
+  "passed_turns": 5,
+  "pass_rate": 1.0,
+  "avg_latency_ms": {
+    "planning": 0.0,
+    "answer": 625.46,
+    "summary": 0.0
+  },
+  "avg_steps_per_turn": 2.0,
+  "by_step_tool": {
+    "text_search": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "calculator": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "note_lookup": {
+      "total": 3,
+      "passed": 2,
+      "pass_rate": 0.6667
+    },
+    "unit_convert": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "structured_lookup": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "by_tag": {
+    "day18": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "retrieval": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "text_search": {
+      "total": 4,
+      "passed": 4,
+      "pass_rate": 1.0
+    },
+    "calculator": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "multistep": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    },
+    "note_lookup": {
+      "total": 3,
+      "passed": 3,
+      "pass_rate": 1.0
+    },
+    "unit_convert": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "boundary": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    },
+    "structured_lookup": {
+      "total": 1,
+      "passed": 1,
+      "pass_rate": 1.0
+    }
+  },
+  "by_failure_type": {},
+  "by_route_source": {
+    "heuristic_multistep_patch": {
+      "total": 5,
+      "passed": 5,
+      "pass_rate": 1.0
+    }
+  }
+}
