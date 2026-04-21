@@ -1,0 +1,8 @@
+{
+  "selected_cases": [
+    "step_meituan_onekey_0001"
+  ],
+  "output_dir": "./output_quick",
+  "debug_test": true,
+  "env_file": ".env.quick"
+}

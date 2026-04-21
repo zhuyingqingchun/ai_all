@@ -1,0 +1,95 @@
+diff --git a/.env.quick b/.env.quick
+new file mode 100644
+index 0000000..d68329f
+--- /dev/null
++++ b/.env.quick
+@@ -0,0 +1,6 @@
++# 本地快速调试环境变量文件
++# run_quick_eval.py 会在启动时自动读取该文件
++DEBUG_MODEL_ID=Doubao-1-5-vision-pro-32k
++VLM_API_KEY=请替换成你的真实Key
++# 可选：如果你需要自定义 API 地址，再取消下一行注释
++# DEBUG_API_URL=https://ark.cn-beijing.volces.com/api/v3
+diff --git a/.env.quick.example b/.env.quick.example
+new file mode 100644
+index 0000000..d68329f
+--- /dev/null
++++ b/.env.quick.example
+@@ -0,0 +1,6 @@
++# 本地快速调试环境变量文件
++# run_quick_eval.py 会在启动时自动读取该文件
++DEBUG_MODEL_ID=Doubao-1-5-vision-pro-32k
++VLM_API_KEY=请替换成你的真实Key
++# 可选：如果你需要自定义 API 地址，再取消下一行注释
++# DEBUG_API_URL=https://ark.cn-beijing.volces.com/api/v3
+diff --git a/local_quick_eval_config.json b/local_quick_eval_config.json
+index 313a0b3..86914d7 100644
+--- a/local_quick_eval_config.json
++++ b/local_quick_eval_config.json
+@@ -4,5 +4,6 @@
+     "step_meituan_onekey_0001"
+   ],
+   "output_dir": "./output_quick",
+-  "debug_test": true
++  "debug_test": true,
++  "env_file": ".env.quick"
+ }
+diff --git a/run_quick_eval.py b/run_quick_eval.py
+index 8bb172c..40ddfac 100644
+--- a/run_quick_eval.py
++++ b/run_quick_eval.py
+@@ -7,14 +7,29 @@ import shutil
+ import tempfile
+ from pathlib import Path
+ 
+-from agent import Agent
+-from test_runner import TestRunner
++
++def _load_env_file(env_path: str | None) -> None:
++    if not env_path:
++        return
++    path = Path(env_path).expanduser()
++    if not path.exists():
++        return
++    for raw_line in path.read_text(encoding="utf-8").splitlines():
++        line = raw_line.strip()
++        if not line or line.startswith('#') or '=' not in line:
++            continue
++        key, value = line.split('=', 1)
++        key = key.strip()
++        value = value.strip().strip('"').strip("'")
++        if key and key not in os.environ:
++            os.environ[key] = value
+ 
+ 
+ def parse_args():
+     parser = argparse.ArgumentParser(description="仅跑 1~2 个样本的本地快速回归脚本")
+     parser.add_argument("--config", default="local_quick_eval_config.json", help="快速回归配置文件")
+     parser.add_argument("--data_dir", default="./test_data/offline", help="完整离线数据集目录")
++    parser.add_argument("--env-file", default=None, help="可选：显式指定环境变量文件路径")
+     return parser.parse_args()
+ 
+ 
+@@ -23,6 +38,12 @@ def main():
+     with open(args.config, "r", encoding="utf-8") as f:
+         cfg = json.load(f)
+ 
++    env_file = args.env_file or cfg.get("env_file") or ".env.quick"
++    _load_env_file(env_file)
++
++    from agent import Agent
++    from test_runner import TestRunner
++
+     selected_cases = cfg.get("selected_cases") or []
+     output_dir = cfg.get("output_dir", "./output_quick")
+     debug_test = bool(cfg.get("debug_test", True))
+@@ -49,7 +70,9 @@ def main():
+ 
+     print("\n" + "=" * 50)
+     print("快速回归完成")
++    print(f"env_file: {env_file}")
+     print(f"selected_cases: {selected_cases}")
++    print(f"DEBUG_MODEL_ID: {os.environ.get('DEBUG_MODEL_ID', '')}")
+     print(f"total_cases: {results['total_cases']}")
+     print(f"passed_cases: {results['passed_cases']}")
+     print(f"case_accuracy: {results['case_accuracy']:.2%}")

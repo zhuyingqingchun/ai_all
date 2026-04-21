@@ -1,0 +1,16 @@
+{
+  "patch": "/mnt/data/day_project_learning/outputs/session_12_envfile_quick_eval.patch",
+  "report": "/mnt/data/day_project_learning/outputs/session_12_envfile_quick_eval_report.md",
+  "checks": {
+    "git_apply_check": true,
+    "git_apply": true,
+    "py_compile": true,
+    "run_help": true
+  },
+  "files_touched": [
+    "run_quick_eval.py",
+    "local_quick_eval_config.json",
+    ".env.quick",
+    ".env.quick.example"
+  ]
+}
