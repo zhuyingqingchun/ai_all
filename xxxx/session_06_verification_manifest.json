@@ -1,0 +1,28 @@
+{
+  "package_root": "/mnt/data/day_project_learning/outputs/ark_api_submission_small/submission",
+  "zip_path": "/mnt/data/day_project_learning/outputs/ark_api_submission_small/submission_ark_api_small.zip",
+  "zip_size_bytes": 14658,
+  "zip_size_kb": 14.31,
+  "python_compile": {
+    "submission/src/agent_base.py": "ok",
+    "submission/src/agent.py": "ok",
+    "submission/src/utils/action_parser.py": "ok",
+    "submission/src/utils/state_manager.py": "ok"
+  },
+  "smoke_test": {
+    "action": "OPEN",
+    "parameters": {
+      "app_name": "美团"
+    }
+  },
+  "files": [
+    "submission/doc/算法设计说明文档.md",
+    "submission/src/agent.py",
+    "submission/src/agent_base.py",
+    "submission/src/requirements.txt",
+    "submission/src/utils/__init__.py",
+    "submission/src/utils/action_parser.py",
+    "submission/src/utils/state_manager.py"
+  ],
+  "skill_local_path": "/mnt/data/day_project_learning/outputs/ark_api_submission_small/skills/ark_api_submission_skill/SKILL.md"
+}

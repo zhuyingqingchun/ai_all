@@ -16,11 +16,16 @@ env/
 *.swo
 *~
 
-# Output & Logs
-output/
-*.log
-*.xlsx
-*.json
+# Output & Logs (保留测试结果用于远程评估)
+# output/
+# *.log
+# *.xlsx
+# *.json
+
+# 但忽略大文件和缓存
+__pycache__/
+*.pyc
+*.pyo
 
 # Test data (large files)
 test_data/
