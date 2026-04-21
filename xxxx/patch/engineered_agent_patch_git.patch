@@ -1,0 +1,340 @@
+diff --git a/agent.py b/agent.py
+index 163d5c8..0b1ffd3 100644
+--- a/agent.py
++++ b/agent.py
+@@ -8,13 +8,13 @@ from utils.state_manager import GUIStateManager
+ 
+ 
+ class Agent(BaseAgent):
+-    """单主模型执行版 Agent。
++    """工程化单主模型 GUI Agent。
+ 
+     设计目标：
+-    1. 严格通过 BaseAgent._call_api() 调模型，避免与提交阶段替换后的 agent_base.py 冲突。
+-    2. 不依赖多模型串联，只使用 agent_base.py 当前注入的单个 model_id。
+-    3. 保留本地 parser / state manager，提高输出稳定性和多步一致性。
+-    4. 提供首步 OPEN 规则，减少桌面场景首步误判。
++    1. 仍然只通过 BaseAgent._call_api() 调单个视觉模型，避免与提交环境冲突。
++    2. 使用轻量状态摘要代替长历史，减少 token 占用。
++    3. 在代码层加入硬约束：前 3 步默认禁止 COMPLETE。
++    4. 对重复点击使用“重瞄”策略，降低盲点式重复失误。
+     """
+ 
+     def _initialize(self):
+@@ -24,28 +24,34 @@ class Agent(BaseAgent):
+     def reset(self):
+         self.state.reset()
+ 
+-    def generate_messages(self, input_data: AgentInput) -> List[Dict[str, Any]]:
+-        self.state.bootstrap(input_data.instruction)
+-        context_text = self.state.build_context_text(input_data.current_image, input_data.step_count)
+-        system_prompt = (
+-            "你是一个安卓手机 GUI Agent。你只能输出一个 JSON 对象，不能输出 markdown 代码块，不能输出额外解释。\n"
+-            "合法 action 只有：CLICK, TYPE, SCROLL, OPEN, COMPLETE。\n"
+-            "parameters 必须严格满足以下格式之一：\n"
+-            '{"action":"CLICK","parameters":{"point":[x,y]}}\n'
+-            '{"action":"TYPE","parameters":{"text":"内容"}}\n'
+-            '{"action":"SCROLL","parameters":{"start_point":[x1,y1],"end_point":[x2,y2]}}\n'
+-            '{"action":"OPEN","parameters":{"app_name":"应用名"}}\n'
+-            '{"action":"COMPLETE","parameters":{}}\n'
+-            "所有坐标必须是 0~1000 的整数归一化坐标。\n"
+-            "如果当前页面已经达到用户目标，就输出 COMPLETE。\n"
+-            "避免与最近两步完全重复的动作。"
++    def _build_system_prompt(self) -> str:
++        return (
++            "你是一个安卓手机 GUI Agent。你必须只输出一个动作，不能解释，不能输出思考过程。\n"
++            "合法动作只有：CLICK, TYPE, SCROLL, OPEN, COMPLETE。\n"
++            "输出格式只能是以下 5 种之一：\n"
++            "CLICK:[[x,y]]\n"
++            "TYPE:['内容']\n"
++            "SCROLL:[[x1,y1],[x2,y2]]\n"
++            "OPEN:['应用名']\n"
++            "COMPLETE:[]\n"
++            "坐标必须是 0~1000 的整数归一化坐标。\n"
++            "原则：优先点击明确可见目标，其次输入，再考虑滚动。\n"
++            "只有当任务明确完成时才输出 COMPLETE；不要因为不确定就输出 COMPLETE。\n"
++            "如果上一步可能点偏了，应重新瞄准上一个目标附近的小区域，而不是重复完全相同的坐标。"
+         )
+-        user_text = (
+-            f"{context_text}\n\n"
+-            "请根据用户指令、最近动作历史和当前截图，只输出一个 JSON 动作。"
++
++    def _build_user_text(self, input_data: AgentInput) -> str:
++        self.state.bootstrap(input_data.instruction)
++        return self.state.build_context_text(
++            current_image=input_data.current_image,
++            step_count=input_data.step_count,
++            history_actions=input_data.history_actions,
+         )
++
++    def generate_messages(self, input_data: AgentInput) -> List[Dict[str, Any]]:
++        user_text = self._build_user_text(input_data)
+         return [
+-            {"role": "system", "content": system_prompt},
++            {"role": "system", "content": self._build_system_prompt()},
+             {
+                 "role": "user",
+                 "content": [
+@@ -57,11 +63,15 @@ class Agent(BaseAgent):
+ 
+     def act(self, input_data: AgentInput) -> AgentOutput:
+         self.state.bootstrap(input_data.instruction)
++        self.state.ingest_external_history(input_data.history_actions)
+ 
+         heuristic = self.state.maybe_first_step_open(input_data.instruction, input_data.step_count)
+         if heuristic is not None:
+-            action, parameters = heuristic
+-            action, parameters = self.state.postprocess(action, parameters)
++            action, parameters = self.state.postprocess(
++                action=heuristic[0],
++                parameters=heuristic[1],
++                step_count=input_data.step_count,
++            )
+             raw_output = "[heuristic:first_step_open]"
+             self.state.record_step(input_data.step_count, action, parameters, raw_output=raw_output)
+             return AgentOutput(action=action, parameters=parameters, raw_output=raw_output)
+@@ -73,7 +83,11 @@ class Agent(BaseAgent):
+ 
+         try:
+             parsed = self.parser.parse(raw_output)
+-            action, parameters = self.state.postprocess(parsed.action, parsed.parameters)
++            action, parameters = self.state.postprocess(
++                action=parsed.action,
++                parameters=parsed.parameters,
++                step_count=input_data.step_count,
++            )
+         except ActionParseError:
+             self.state.record_parse_failure()
+             action, parameters = self.state.safe_fallback(input_data.step_count)
+diff --git a/utils/state_manager.py b/utils/state_manager.py
+index d29375f..556012e 100644
+--- a/utils/state_manager.py
++++ b/utils/state_manager.py
+@@ -18,8 +18,13 @@ class StepTrace:
+ class AgentState:
+     instruction: str = ""
+     target_app: str = ""
+-    steps: List[StepTrace] = field(default_factory=list)
++    current_subgoal: str = ""
++    page_guess: str = "home_or_desktop"
++    last_typed_text: str = ""
++    repeated_action_count: int = 0
+     parse_failures: int = 0
++    retry_cursor: int = 0
++    steps: List[StepTrace] = field(default_factory=list)
+ 
+ 
+ class GUIStateManager:
+@@ -27,6 +32,7 @@ class GUIStateManager:
+         "爱奇艺", "百度地图", "哔哩哔哩", "抖音", "快手", "芒果TV", "美团", "腾讯视频", "喜马拉雅", "QQ", "微信",
+         "淘宝", "京东", "高德地图", "饿了么", "小红书", "中兴管家",
+     ]
++    RETRY_OFFSETS = [(0, 0), (18, 0), (-18, 0), (0, 18), (0, -18), (28, 16), (-28, 16)]
+ 
+     def __init__(self) -> None:
+         self.state = AgentState()
+@@ -38,22 +44,38 @@ class GUIStateManager:
+         if not self.state.instruction:
+             self.state.instruction = instruction
+             self.state.target_app = self._extract_target_app(instruction)
++            self.state.current_subgoal = self._infer_subgoal(step_count=1)
+ 
+-    def build_context_text(self, current_image: Image.Image, step_count: int) -> str:
++    def ingest_external_history(self, history_actions: List[Dict[str, Any]]) -> None:
++        # 当前实现以本地 record_step 为准，这里仅保留接口兼容。
++        _ = history_actions
++
++    def build_context_text(self, current_image: Image.Image, step_count: int, history_actions: Optional[List[Dict[str, Any]]] = None) -> str:
+         width, height = current_image.size
+-        recent = self.state.steps[-4:]
++        self.state.current_subgoal = self._infer_subgoal(step_count)
++        self.state.page_guess = self._infer_page_guess(step_count)
++        recent = self.state.steps[-2:]
+         recent_lines = []
+         for item in recent:
+-            recent_lines.append(f"- step={item.step}, action={item.action}, params={item.parameters}")
+-        recent_text = "\n".join(recent_lines) if recent_lines else "- 无历史动作"
+-        target_app_text = self.state.target_app or "未明确识别"
++            recent_lines.append(f"step={item.step}, action={item.action}, params={item.parameters}")
++        recent_text = " | ".join(recent_lines) if recent_lines else "无"
++        retry_hint = "是" if self.state.repeated_action_count >= 1 else "否"
++        history_count = len(history_actions or [])
+         return (
+-            f"任务指令: {self.state.instruction}\n"
+-            f"目标应用候选: {target_app_text}\n"
+-            f"当前步数: {step_count}\n"
+-            f"当前截图尺寸: {width}x{height}\n"
+-            f"最近动作历史:\n{recent_text}\n"
+-            f"要求: 输出一个最合理的下一步动作，坐标使用 0~1000 归一化。"
++            f"用户目标：{self.state.instruction}\n"
++            f"目标应用：{self.state.target_app or '未知'}\n"
++            f"当前子目标：{self.state.current_subgoal}\n"
++            f"当前页面猜测：{self.state.page_guess}\n"
++            f"当前步数：{step_count}\n"
++            f"截图尺寸：{width}x{height}\n"
++            f"最近动作：{recent_text}\n"
++            f"最近输入文本：{self.state.last_typed_text or '无'}\n"
++            f"是否处于重瞄阶段：{retry_hint}\n"
++            f"外部历史条数：{history_count}\n"
++            "决策要求：\n"
++            "1. 如果界面上已经能看到可操作目标，优先 CLICK / TYPE，不要先 SCROLL。\n"
++            "2. 如果上一步可能点偏了，重新点击同一目标附近的小区域。\n"
++            "3. 除非任务明确完成，否则不要输出 COMPLETE。"
+         )
+ 
+     def maybe_first_step_open(self, instruction: str, step_count: int) -> Optional[Tuple[str, Dict[str, Any]]]:
+@@ -64,57 +86,132 @@ class GUIStateManager:
+             return "OPEN", {"app_name": app_name}
+         return None
+ 
+-    def postprocess(self, action: str, parameters: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
++    def postprocess(self, action: str, parameters: Dict[str, Any], step_count: int) -> Tuple[str, Dict[str, Any]]:
+         action = action.upper().strip()
+         parameters = dict(parameters or {})
+ 
+         if action == "CLICK":
+             parameters["point"] = self._clamp_point(parameters.get("point", [500, 500]))
++            parameters["point"] = self._maybe_reaim_click(parameters["point"])
+         elif action == "SCROLL":
+-            start = self._clamp_point(parameters.get("start_point", [500, 700]))
+-            end = self._clamp_point(parameters.get("end_point", [500, 300]))
++            start = self._clamp_point(parameters.get("start_point", [500, 760]))
++            end = self._clamp_point(parameters.get("end_point", [500, 280]))
+             if start == end:
+-                end = [start[0], max(0, start[1] - 400)]
++                end = [start[0], max(0, start[1] - 420)]
+             parameters = {"start_point": start, "end_point": end}
++            # 没有明显卡住前，早期阶段尽量不滚动
++            if step_count <= 2 and self.state.repeated_action_count == 0:
++                action = "CLICK"
++                parameters = {"point": self._default_click_anchor()}
+         elif action == "TYPE":
+-            parameters = {"text": str(parameters.get("text", "")).strip()}
++            text = str(parameters.get("text", "")).strip()
++            parameters = {"text": text}
+         elif action == "OPEN":
+             app_name = str(parameters.get("app_name", "")).strip()
+             if not app_name and self.state.target_app:
+                 app_name = self.state.target_app
+             parameters = {"app_name": app_name}
+         elif action == "COMPLETE":
++            if not self._allow_complete(step_count):
++                return self.safe_fallback(step_count)
+             parameters = {}
+ 
+-        if self._is_repeated(action, parameters):
+-            if action == "CLICK":
+-                point = parameters.get("point", [500, 500])
+-                parameters["point"] = [min(1000, point[0] + 20), min(1000, point[1] + 20)]
+-            elif action == "SCROLL":
+-                start = parameters["start_point"]
+-                end = parameters["end_point"]
+-                parameters["start_point"] = [start[0], min(1000, start[1] + 60)]
+-                parameters["end_point"] = [end[0], max(0, end[1] - 60)]
++        if action == "TYPE":
++            self.state.last_typed_text = parameters.get("text", "")
+         return action, parameters
+ 
+     def safe_fallback(self, step_count: int) -> Tuple[str, Dict[str, Any]]:
+         if step_count <= 2 and self.state.target_app:
+             return "OPEN", {"app_name": self.state.target_app}
+-        if self.state.steps and self.state.steps[-1].action == "CLICK":
+-            return "SCROLL", {"start_point": [500, 750], "end_point": [500, 300]}
+-        return "COMPLETE", {}
++
++        last_click = self._last_click_point()
++        if last_click is not None:
++            return "CLICK", {"point": self._next_retry_point(last_click)}
++
++        if self.state.last_typed_text:
++            return "CLICK", {"point": [880, 945]}
++
++        if self.state.repeated_action_count >= 2:
++            return "SCROLL", {"start_point": [500, 760], "end_point": [500, 280]}
++
++        return "CLICK", {"point": self._default_click_anchor()}
+ 
+     def record_step(self, step: int, action: str, parameters: Dict[str, Any], raw_output: str) -> None:
+-        self.state.steps.append(StepTrace(step=step, action=action, parameters=dict(parameters), raw_output=raw_output))
++        trace = StepTrace(step=step, action=action, parameters=dict(parameters), raw_output=raw_output)
++        if self.state.steps and self.state.steps[-1].action == action and self.state.steps[-1].parameters == parameters:
++            self.state.repeated_action_count += 1
++        else:
++            self.state.repeated_action_count = 0
++            self.state.retry_cursor = 0
++        self.state.steps.append(trace)
++        self.state.page_guess = self._infer_page_guess(step)
++        self.state.current_subgoal = self._infer_subgoal(step + 1)
+ 
+     def record_parse_failure(self) -> None:
+         self.state.parse_failures += 1
+ 
+-    def _is_repeated(self, action: str, parameters: Dict[str, Any]) -> bool:
+-        if len(self.state.steps) < 2:
++    def _allow_complete(self, step_count: int) -> bool:
++        if step_count <= 3:
+             return False
+-        recent = self.state.steps[-2:]
+-        return all(item.action == action and item.parameters == parameters for item in recent)
++        if self.state.repeated_action_count >= 2:
++            return False
++        if self.state.target_app and not self.state.last_typed_text and step_count <= 5:
++            return False
++        return True
++
++    def _maybe_reaim_click(self, point: List[int]) -> List[int]:
++        if not self.state.steps:
++            return point
++        last = self.state.steps[-1]
++        if last.action != "CLICK":
++            return point
++        if last.parameters.get("point") != point:
++            return point
++        return self._next_retry_point(point)
++
++    def _next_retry_point(self, point: List[int]) -> List[int]:
++        offset = self.RETRY_OFFSETS[min(self.state.retry_cursor, len(self.RETRY_OFFSETS) - 1)]
++        self.state.retry_cursor = min(self.state.retry_cursor + 1, len(self.RETRY_OFFSETS) - 1)
++        return self._clamp_point([point[0] + offset[0], point[1] + offset[1]])
++
++    def _last_click_point(self) -> Optional[List[int]]:
++        for item in reversed(self.state.steps):
++            if item.action == "CLICK" and "point" in item.parameters:
++                return self._clamp_point(item.parameters["point"])
++        return None
++
++    def _infer_subgoal(self, step_count: int) -> str:
++        if step_count <= 1:
++            return "打开目标应用"
++        if not self.state.last_typed_text:
++            if any(k in self.state.instruction for k in ["搜", "搜索", "查", "找", "导航", "酒店", "外卖"]):
++                return "找到搜索框或输入入口"
++            return "找到任务相关入口并点击"
++        if any(k in self.state.instruction for k in ["下单", "预订", "购买", "确定"]):
++            return "找到确认或提交按钮"
++        return "根据已输入内容继续点击下一步"
++
++    def _infer_page_guess(self, step_count: int) -> str:
++        if step_count == 1:
++            return "desktop_or_home"
++        if self.state.steps:
++            last = self.state.steps[-1]
++            if last.action == "OPEN":
++                return "app_home"
++            if last.action == "TYPE":
++                return "input_or_search_result"
++            if last.action == "SCROLL":
++                return "list_or_feed"
++            if last.action == "CLICK":
++                return "detail_or_transition"
++        return self.state.page_guess
++
++    def _default_click_anchor(self) -> List[int]:
++        if self.state.last_typed_text:
++            return [880, 945]
++        if self.state.target_app in {"美团", "淘宝", "京东", "饿了么"}:
++            return [500, 120]
++        return [500, 500]
+ 
+     @staticmethod
+     def _clamp_point(point: Any) -> List[int]:

@@ -1,0 +1,12 @@
+{
+  "/mnt/data/day_project_learning/patch_engineer_v1/engineered_agent_patch_git.patch": {
+    "exists": true,
+    "size": 17120,
+    "sha256": "61b8125b57041185f379a0b42ca17f732bd6d407e1cc0e298e5d7289cb747e17"
+  },
+  "/mnt/data/session21_outputs/session_21_engineered_agent_patch_report.md": {
+    "exists": true,
+    "size": 2919,
+    "sha256": "4128d261a60058679b19ad6ae4bcf850571a17424512c76064a2ebec603991e5"
+  }
+}

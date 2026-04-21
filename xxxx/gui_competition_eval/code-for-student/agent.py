@@ -122,8 +122,13 @@ COMPLETE:[]
             action, parameters = self.state.postprocess(parsed.action, parsed.parameters)
         except ActionParseError:
             self.state.record_parse_failure()
-            # 最后兜底：尝试完成，避免因为格式问题直接输出空动作
-            action, parameters = "COMPLETE", {}
+            # 兜底：解析失败时返回安全动作
+            action, parameters = "CLICK", {"point": [500, 500]}
+
+        # 第21轮：前3步强制禁止 COMPLETE
+        if action == "COMPLETE" and input_data.step_count <= 3:
+            action = "CLICK"
+            parameters = {"point": [500, 500]}
 
         self.state.record_step(input_data.step_count, action, parameters, raw_output=raw_output)
         return AgentOutput(
