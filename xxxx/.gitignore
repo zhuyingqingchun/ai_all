@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Output & Logs
+output/
+*.log
+*.xlsx
+*.json
+
+# Test data (large files)
+test_data/
+*.png
+*.jpg
+*.jpeg
+
+# Visualization
+visualization/
+
+# Archives
+*.zip
+
+# OS
+.DS_Store
+Thumbs.db
