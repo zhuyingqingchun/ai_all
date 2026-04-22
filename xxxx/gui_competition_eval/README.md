@@ -7,38 +7,67 @@
 ## 目录结构
 
 ```
-gui_competition_eval/
-├── code-for-student/          # 主要开发和测试目录
-│   ├── agent.py               # Agent 主实现（参赛者修改）
-│   ├── agent_base.py          # Agent 基类（主办方提供）
-│   ├── test_runner.py         # 测试运行器（主办方提供）
-│   ├── run_quick_eval.py      # 快速回归测试脚本
-│   ├── local_quick_eval_config.json  # 快速测试配置
-│   ├── .env.quick.example     # 环境变量模板
-│   ├── .env.quick             # 本地环境配置（gitignored）
-│   ├── requirements.txt       # Python 依赖
-│   ├── model.txt              # 可用模型列表
-│   ├── test_data/             # 测试数据集
-│   │   └── offline/           # 离线测试数据
-│   ├── utils/                 # 工具模块
-│   │   ├── action_parser.py   # 动作解析器
-│   │   ├── state_manager.py   # 状态管理器
-│   │   ├── image_utils.py     # 图像工具
-│   │   ├── visualize_ref.py   # 可视化工具
-│   │   └── __init__.py
-│   ├── output/                # 完整测试结果输出
-│   └── output_quick/          # 快速测试结果输出
+xxxx/                           # 项目根目录
+├── gui_competition_eval/       # GUI 竞赛主目录
+│   ├── code-for-student/       # 主要开发和测试目录
+│   │   ├── agent.py            # Agent 主实现（参赛者修改）
+│   │   ├── agent_base.py       # Agent 基类（主办方提供）
+│   │   ├── test_runner.py      # 测试运行器（主办方提供）
+│   │   ├── run_quick_eval.py   # 快速回归测试脚本
+│   │   ├── local_quick_eval_config.json   # 快速测试配置
+│   │   ├── local_model_config.py          # 本地模型配置
+│   │   ├── .env.quick.example  # 环境变量模板
+│   │   ├── .env.quick          # 本地环境配置（gitignored）
+│   │   ├── requirements.txt    # Python 依赖
+│   │   ├── model.txt           # 可用模型列表
+│   │   ├── test_data/          # 测试数据集
+│   │   │   └── offline/        # 离线测试数据
+│   │   │       ├── step_meituan_onekey_0001/   # 美团测试用例
+│   │   │       ├── step_baidumap_onekey_0008/  # 百度地图测试用例
+│   │   │       └── ...         # 其他测试用例
+│   │   ├── utils/              # 工具模块
+│   │   │   ├── action_parser.py    # 动作解析器（支持容错解析）
+│   │   │   ├── state_manager.py    # 状态管理器（含任务先验）
+│   │   │   ├── cache_store.py      # 缓存存储
+│   │   │   ├── checkpoint_store.py # 检查点存储
+│   │   │   ├── observability.py    # 可观测性（trace/metrics）
+│   │   │   ├── image_utils.py      # 图像工具
+│   │   │   ├── visualize_ref.py    # 可视化工具
+│   │   │   └── __init__.py
+│   │   ├── output/             # 完整测试结果输出
+│   │   │   ├── result.xlsx
+│   │   │   └── test_run.log
+│   │   └── output_quick/       # 快速测试结果输出
+│   │       ├── trace.jsonl     # 执行轨迹日志
+│   │       ├── metrics.json    # 指标统计
+│   │       ├── checkpoints/    # 步骤检查点
+│   │       ├── cache/          # 模型响应缓存
+│   │       ├── visualization/  # 可视化报告
+│   │       └── result.xlsx
+│   │
+│   ├── submission/             # 最终提交目录
+│   │   ├── src/                # 提交源代码
+│   │   │   ├── agent.py
+│   │   │   ├── agent_base.py
+│   │   │   ├── utils/
+│   │   │   └── requirements.txt
+│   │   └── doc/                # 文档
+│   │       └── 算法设计说明文档.md
+│   │
+│   └── README.md               # 本文件
 │
-├── submission/                # 最终提交目录
-│   ├── src/                   # 提交源代码
-│   │   ├── agent.py           # Agent 实现
-│   │   ├── agent_base.py      # 基类
-│   │   ├── utils/             # 工具模块
-│   │   └── requirements.txt   # 依赖
-│   └── doc/                   # 文档
-│       └── 算法设计说明文档.md
-│
-└── README.md                  # 本文件
+└── patch/                      # 开发补丁记录
+    ├── session_12_envfile_quick_eval.patch
+    ├── session_18_gui_action_system_prompt_v2.txt
+    ├── session_21_engineered_agent_patch_git.patch
+    ├── session_27_engineering_suite_report.md
+    ├── session_28_dataset_aligned_prompt.txt
+    ├── session_34_engineering_fix.patch
+    ├── session_34_engineering_fix_report.md
+    ├── session_38_task_specific_prior_patch.patch
+    ├── session_38_task_specific_prior_report.md
+    └── glm官方/
+        └── session_36_glm46v_minimal_patch.patch
 ```
 
 ## 快速开始
@@ -137,9 +166,29 @@ Agent 主实现，包含：
 
 ## 开发记录
 
-- **第12轮**: 添加环境配置文件自动加载
-- **第17轮**: 优化 System Prompt 格式
-- **第18轮**: 强化决策约束（禁止过早 COMPLETE、优化坐标精度）
+| 轮次 | 日期 | 主要内容 | 关键改进 |
+|:----:|:-----|:---------|:---------|
+| 12 | 2025-04-21 | 环境配置优化 | 添加 `.env.quick` 自动加载，避免手动 export |
+| 18 | 2025-04-21 | Prompt 优化 | 强化决策约束，禁止过早 COMPLETE |
+| 21 | 2025-04-21 | Agent 工程化 | 状态管理、动作去重、首步启发式 |
+| 27 | 2025-04-21 | 可观测性套件 | trace.jsonl、metrics.json、cache、checkpoint |
+| 28 | 2025-04-21 | Prompt 对齐 | 与官方数据集对齐的 System Prompt |
+| 34 | 2025-04-21 | 工程修复 | Parser 容错、禁缓存评测、TYPE 约束、page-aware fallback |
+| 38 | 2025-04-21 | 任务专项优化 | 美团/百度地图先验锚点、分阶段子目标、自动 COMPLETE |
+
+### 性能演进
+
+| 阶段 | 步骤准确率 | 主要问题 |
+|:-----|:----------:|:---------|
+| 初始版本 | 21.4% | 过早 COMPLETE、坐标偏差 |
+| 第34轮 | 35.7% | Parser 容错、TYPE 约束 |
+| 第38轮 | **57.14%** | 任务先验、分阶段优化 |
+
+### 当前瓶颈
+
+- **坐标精度**: 占 85% 错误，模型无法精确定位 UI 元素
+- **页面阶段误判**: Step 3/4 重复点击
+- **动作序列偏差**: 与官方轨迹存在时序差异
 
 ## 联系方式
 
